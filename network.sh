@@ -163,7 +163,7 @@ function generatePeerArtifacts() {
     peer1_port=$7
     peer1_event_port=$8
     couchdb0_port=$9
-    couchdb1_port=$10
+    couchdb1_port=${10}
 
     : ${api_port:=${DEFAULT_API_PORT}}
     : ${www_port:=${DEFAULT_WWW_PORT}}
