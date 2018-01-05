@@ -34,7 +34,7 @@ services:
     # Comment/Uncomment the port mapping if you want to hide/expose the CouchDB service,
     # for example map it to utilize Fauxton User Interface in dev environments.
     ports:
-      - "5984:5984"
+      - "COUCHDB0_PORT:5984"
 
   peer0.ORG.DOMAIN:
     container_name: peer0.ORG.DOMAIN
@@ -73,7 +73,7 @@ services:
     # Comment/Uncomment the port mapping if you want to hide/expose the CouchDB service,
     # for example map it to utilize Fauxton User Interface in dev environments.
     ports:
-      - "6984:6984"
+      - "COUCHDB1_PORT:5984"
 
   peer1.ORG.DOMAIN:
     container_name: peer1.ORG.DOMAIN

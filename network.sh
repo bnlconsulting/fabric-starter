@@ -31,6 +31,8 @@ DEFAULT_PEER0_PORT=7051
 DEFAULT_PEER0_EVENT_PORT=7053
 DEFAULT_PEER1_PORT=7056
 DEFAULT_PEER1_EVENT_PORT=7058
+DEFAULT_COUCHDB0_PORT=5984
+DEFAULT_COUCHDB1_PORT=6984
 
 DEFAULT_ORDERER_EXTRA_HOSTS="extra_hosts:[newline]      - peer0.$ORG1.$DOMAIN:$IP1[newline]      - peer0.$ORG2.$DOMAIN:$IP2[newline]      - peer0.$ORG3.$DOMAIN:$IP3"
 DEFAULT_PEER_EXTRA_HOSTS="extra_hosts:[newline]      - orderer.$DOMAIN:$IP_ORDERER"
@@ -160,6 +162,8 @@ function generatePeerArtifacts() {
     peer0_event_port=$6
     peer1_port=$7
     peer1_event_port=$8
+    couchdb0_port=$9
+    couchdb1_port=$10
 
     : ${api_port:=${DEFAULT_API_PORT}}
     : ${www_port:=${DEFAULT_WWW_PORT}}
@@ -168,8 +172,10 @@ function generatePeerArtifacts() {
     : ${peer0_event_port:=${DEFAULT_PEER0_EVENT_PORT}}
     : ${peer1_port:=${DEFAULT_PEER1_PORT}}
     : ${peer1_event_port:=${DEFAULT_PEER1_EVENT_PORT}}
+    : ${couchdb0_port:=${DEFAULT_COUCHDB0_PORT}}
+    : ${couchdb1_port:=${DEFAULT_COUCHDB1_PORT}}
 
-    echo "Creating peer yaml files with $DOMAIN, $org, $api_port, $www_port, $ca_port, $peer0_port, $peer0_event_port, $peer1_port, $peer1_event_port"
+    echo "Creating peer yaml files with $DOMAIN, $org, $api_port, $www_port, $ca_port, $peer0_port, $peer0_event_port, $peer1_port, $peer1_event_port, $couchdb0_port, $couchdb1_port"
 
     f="ledger/docker-compose-$org.yaml"
     compose_template=ledger/docker-composetemplate-peer.yaml
@@ -178,7 +184,7 @@ function generatePeerArtifacts() {
     sed -e "s/DOMAIN/$DOMAIN/g" -e "s/ORG/$org/g" artifacts/cryptogentemplate-peer.yaml > artifacts/"cryptogen-$org.yaml"
 
     # docker-compose.yaml
-    sed -e "s/PEER_EXTRA_HOSTS/$peer_extra_hosts/g" -e "s/CLI_EXTRA_HOSTS/$cli_extra_hosts/g" -e "s/API_EXTRA_HOSTS/$api_extra_hosts/g" -e "s/DOMAIN/$DOMAIN/g" -e "s/\([^ ]\)ORG/\1$org/g" -e "s/API_PORT/$api_port/g" -e "s/WWW_PORT/$www_port/g" -e "s/CA_PORT/$ca_port/g" -e "s/PEER0_PORT/$peer0_port/g" -e "s/PEER0_EVENT_PORT/$peer0_event_port/g" -e "s/PEER1_PORT/$peer1_port/g" -e "s/PEER1_EVENT_PORT/$peer1_event_port/g" ${compose_template} | awk '{gsub(/\[newline\]/, "\n")}1' > ${f}
+    sed -e "s/PEER_EXTRA_HOSTS/$peer_extra_hosts/g" -e "s/CLI_EXTRA_HOSTS/$cli_extra_hosts/g" -e "s/API_EXTRA_HOSTS/$api_extra_hosts/g" -e "s/DOMAIN/$DOMAIN/g" -e "s/\([^ ]\)ORG/\1$org/g" -e "s/API_PORT/$api_port/g" -e "s/WWW_PORT/$www_port/g" -e "s/CA_PORT/$ca_port/g" -e "s/PEER0_PORT/$peer0_port/g" -e "s/PEER0_EVENT_PORT/$peer0_event_port/g" -e "s/PEER1_PORT/$peer1_port/g" -e "s/PEER1_EVENT_PORT/$peer1_event_port/g" ${compose_template} -e "s/COUCHDB0_PORT/$couchdb0_port/g" -e "s/COUCHDB1_PORT/$couchdb1_port/g"| awk '{gsub(/\[newline\]/, "\n")}1' > ${f}
 
     # fabric-ca-server-config.yaml
     sed -e "s/ORG/$org/g" artifacts/fabric-ca-server-configtemplate.yaml > artifacts/"fabric-ca-server-config-$org.yaml"
@@ -629,7 +635,7 @@ function printHelp () {
 }
 
 # Parse commandline args
-while getopts "h?m:o:a:w:c:0:1:2:3:k:" opt; do
+while getopts "h?m:o:a:w:c:0:1:2:3:4:5:k:" opt; do
   case "$opt" in
     h|\?)
       printHelp
@@ -652,6 +658,10 @@ while getopts "h?m:o:a:w:c:0:1:2:3:k:" opt; do
     2)  PEER1_PORT=$OPTARG
     ;;
     3)  PEER1_EVENT_PORT=$OPTARG
+    ;;
+    4)  COUCHDB0_PORT=$OPTARG
+    ;;
+    5)  COUCHDB1_PORT=$OPTARG
     ;;
     k)  CHANNELS=$OPTARG
     ;;
@@ -703,7 +713,7 @@ elif [ "${MODE}" == "generate-orderer" ]; then
   downloadArtifactsOrderer
   generateOrdererArtifacts
 elif [ "${MODE}" == "generate-peer" ]; then
-  generatePeerArtifacts ${ORG} ${API_PORT} ${WWW_PORT} ${CA_PORT} ${PEER0_PORT} ${PEER0_EVENT_PORT} ${PEER1_PORT} ${PEER1_EVENT_PORT}
+  generatePeerArtifacts ${ORG} ${API_PORT} ${WWW_PORT} ${CA_PORT} ${PEER0_PORT} ${PEER0_EVENT_PORT} ${PEER1_PORT} ${PEER1_EVENT_PORT} ${COUCHDB0_PORT} ${COUCHDB1_PORT}
   servePeerArtifacts ${ORG}
 elif [ "${MODE}" == "up-orderer" ]; then
   dockerComposeUp ${DOMAIN}
