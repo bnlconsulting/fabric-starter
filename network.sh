@@ -702,9 +702,9 @@ elif [ "${MODE}" == "clean" ]; then
   clean
 elif [ "${MODE}" == "generate" ]; then
   clean
-  generatePeerArtifacts ${ORG1} 4000 8081 7054 7051 7053 7056 7058
-  generatePeerArtifacts ${ORG2} 4001 8082 8054 8051 8053 8056 8058
-  generatePeerArtifacts ${ORG3} 4002 8083 9054 9051 9053 9056 9058
+  generatePeerArtifacts ${ORG1} 4000 8081 7054 7051 7053 7056 7058 5984 6984
+  generatePeerArtifacts ${ORG2} 4001 8082 8054 8051 8053 8056 8058 5985 6985
+  generatePeerArtifacts ${ORG3} 4002 8083 9054 9051 9053 9056 9058 5986 6986
   generateOrdererDockerCompose
   generateOrdererArtifacts
   generateWait
