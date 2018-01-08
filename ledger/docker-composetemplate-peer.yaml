@@ -93,7 +93,7 @@ services:
       # match the username and password set for the associated CouchDB.
       - CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME=
       - CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD=
-   ports:
+    ports:
       - PEER1_PORT:7051
       - PEER1_EVENT_PORT:7053
     volumes:
