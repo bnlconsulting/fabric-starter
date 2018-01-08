@@ -33,6 +33,8 @@ DEFAULT_PEER1_PORT=7056
 DEFAULT_PEER1_EVENT_PORT=7058
 DEFAULT_COUCHDB0_PORT=5984
 DEFAULT_COUCHDB1_PORT=6984
+# use node as the default language for chaincode
+LANGUAGE=node
 
 DEFAULT_ORDERER_EXTRA_HOSTS="extra_hosts:[newline]      - peer0.$ORG1.$DOMAIN:$IP1[newline]      - peer0.$ORG2.$DOMAIN:$IP2[newline]      - peer0.$ORG3.$DOMAIN:$IP3"
 DEFAULT_PEER_EXTRA_HOSTS="extra_hosts:[newline]      - orderer.$DOMAIN:$IP_ORDERER"
@@ -313,7 +315,7 @@ function dockerComposeUp () {
 
   info "starting docker instances from $compose_file"
 
-  TIMEOUT=${CLI_TIMEOUT} docker-compose -f ${compose_file} up -d 2>&1
+  TIMEOUT=${CLI_TIMEOUT} LANG=${LANGUAGE} docker-compose -f ${compose_file} up -d 2>&1
   if [ $? -ne 0 ]; then
     echo "ERROR !!!! Unable to start network"
     logs ${1}
@@ -635,7 +637,7 @@ function printHelp () {
 }
 
 # Parse commandline args
-while getopts "h?m:o:a:w:c:0:1:2:3:4:5:k:" opt; do
+while getopts "h?m:o:a:w:c:0:1:2:3:4:5:k:l:" opt; do
   case "$opt" in
     h|\?)
       printHelp
@@ -664,6 +666,8 @@ while getopts "h?m:o:a:w:c:0:1:2:3:4:5:k:" opt; do
     5)  COUCHDB1_PORT=$OPTARG
     ;;
     k)  CHANNELS=$OPTARG
+    ;;
+    l)  LANGUAGE=$OPTARG
     ;;
   esac
 done
