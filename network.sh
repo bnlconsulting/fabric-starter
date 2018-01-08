@@ -315,7 +315,7 @@ function dockerComposeUp () {
 
   info "starting docker instances from $compose_file"
 
-  TIMEOUT=${CLI_TIMEOUT} LANG=${LANGUAGE} docker-compose -f ${compose_file} up -d 2>&1
+  TIMEOUT=${CLI_TIMEOUT} docker-compose -f ${compose_file} up -d 2>&1
   if [ $? -ne 0 ]; then
     echo "ERROR !!!! Unable to start network"
     logs ${1}
