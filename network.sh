@@ -749,7 +749,7 @@ elif [ "${MODE}" == "up-1" ]; then
 elif [ "${MODE}" == "up-2" ]; then
   downloadArtifactsMember ${ORG2} common "${ORG1}-${ORG2}" "${ORG2}-${ORG3}"
   dockerComposeUp ${ORG2}
-  installAll ${ORG2}
+  installAllNode ${ORG2}
 
   downloadChannelBlockFile ${ORG2} ${ORG1} common
   joinWarmUp ${ORG2} common ${NODE_CHAINCODE_NAME}
@@ -762,7 +762,7 @@ elif [ "${MODE}" == "up-2" ]; then
 elif [ "${MODE}" == "up-3" ]; then
   downloadArtifactsMember ${ORG3} common "${ORG1}-${ORG3}" "${ORG2}-${ORG3}"
   dockerComposeUp ${ORG3}
-  installAll ${ORG3}
+  installAllNode ${ORG3}
 
   downloadChannelBlockFile ${ORG3} ${ORG1} common
   joinWarmUp ${ORG3} common ${NODE_CHAINCODE_NAME}
