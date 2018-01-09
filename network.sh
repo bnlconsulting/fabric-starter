@@ -17,10 +17,13 @@ CLI_TIMEOUT=10000
 COMPOSE_TEMPLATE=ledger/docker-composetemplate.yaml
 COMPOSE_FILE_DEV=ledger/docker-composedev.yaml
 
+NODE_CHAINCODE_NAME=chaincode
+NODE_CHAINCODE_INIT='{"Args":[""]}'
 CHAINCODE_COMMON_NAME=reference
 CHAINCODE_BILATERAL_NAME=relationship
 CHAINCODE_COMMON_INIT='{"Args":["init","a","100","b","100"]}'
 CHAINCODE_BILATERAL_INIT='{"Args":["init","a","100","b","100"]}'
+
 CHAINCODE_WARMUP_QUERY='{\"Args\":[\"query\"]}'
 
 DEFAULT_ORDERER_PORT=7050
@@ -276,11 +279,12 @@ function instantiateChaincode () {
 
     info "instantiating chaincode $n on $channel_name by $org using $f with $i"
 
-    c="CORE_PEER_ADDRESS=peer0.$org.$DOMAIN:7051 peer chaincode instantiate -n $n -v 1.0 -c '$i' -o orderer.$DOMAIN:7050 -C $channel_name --tls --cafile /etc/hyperledger/crypto/orderer/tls/ca.crt"
+    c="CORE_PEER_ADDRESS=peer0.$org.$DOMAIN:7051 peer chaincode instantiate -n $n -l ${LANGUAGE} -v 1.0 -c '$i' -o orderer.$DOMAIN:7050 -C $channel_name --tls --cafile /etc/hyperledger/crypto/orderer/tls/ca.crt"
     echo ${c}
 
     docker-compose --file ${f} run --rm "cli.$org.$DOMAIN" bash -c "${c}"
 }
+
 
 function warmUpChaincode () {
     org=$1
@@ -305,10 +309,10 @@ function installChaincode() {
     p=${n}
     f="ledger/docker-compose-${org}.yaml"
 
-    info "installing chaincode $n to peers of $org from ./chaincode/go/$p using $f"
-
-    docker-compose --file ${f} run --rm "cli.$org.$DOMAIN" bash -c "CORE_PEER_ADDRESS=peer0.$org.$DOMAIN:7051 peer chaincode install -n $n -v 1.0 -p $p && CORE_PEER_ADDRESS=peer1.$org.$DOMAIN:7051 peer chaincode install -n $n -v 1.0 -p $p"
+    info "installing chaincode $n to peers of $org from ./chaincode/go/$p using $f and using language ${LANGUAGE}"
+    docker-compose --file ${f} run --rm "cli.$org.$DOMAIN" bash -c "CORE_PEER_ADDRESS=peer0.$org.$DOMAIN:7051 peer chaincode install -n $n -v 1.0 --lang ${LANGUAGE} -p /opt/gopath/src/$p && CORE_PEER_ADDRESS=peer1.$org.$DOMAIN:7051 peer chaincode install -n $n -v 1.0 --lang ${LANGUAGE} -p /opt/gopath/src/$p"
 }
+
 
 function dockerComposeUp () {
   compose_file="ledger/docker-compose-$1.yaml"
@@ -342,6 +346,15 @@ function installAll() {
   done
 }
 
+function installAllNode() {
+  org=$1
+
+  for chaincode_name in ${NODE_CHAINCODE_NAME}
+  do
+    installChaincode ${org} ${chaincode_name}
+  done
+}
+
 #function installInstantiateWarmUp() {
 #  org=$1
 #  channel_name=$2
@@ -370,7 +383,7 @@ function joinWarmUp() {
 
   joinChannel ${org} ${channel_name}
   sleep 7
-  warmUpChaincode ${org} ${channel_name} ${chaincode_name}
+#  warmUpChaincode ${org} ${channel_name} ${chaincode_name}
 }
 
 function createJoinInstantiateWarmUp() {
@@ -383,7 +396,7 @@ function createJoinInstantiateWarmUp() {
   joinChannel ${org} ${channel_name}
   instantiateChaincode ${org} ${channel_name} ${chaincode_name} ${chaincode_init}
   sleep 7
-  warmUpChaincode ${org} ${channel_name} ${chaincode_name}
+#  warmUpChaincode ${org} ${channel_name} ${chaincode_name}
 }
 
 function makeCertDirs() {
@@ -725,13 +738,13 @@ elif [ "${MODE}" == "up-orderer" ]; then
 elif [ "${MODE}" == "up-1" ]; then
   downloadArtifactsMember ${ORG1} common "${ORG1}-${ORG2}" "${ORG1}-${ORG3}"
   dockerComposeUp ${ORG1}
-  installAll ${ORG1}
+  installAllNode ${ORG1}
 
-  createJoinInstantiateWarmUp ${ORG1} common ${CHAINCODE_COMMON_NAME} ${CHAINCODE_COMMON_INIT}
+  createJoinInstantiateWarmUp ${ORG1} common ${NODE_CHAINCODE_NAME} ${NODE_CHAINCODE_INIT}
 
-  createJoinInstantiateWarmUp ${ORG1} "${ORG1}-${ORG2}" ${CHAINCODE_BILATERAL_NAME} ${CHAINCODE_BILATERAL_INIT}
+  createJoinInstantiateWarmUp ${ORG1} "${ORG1}-${ORG2}" ${NODE_CHAINCODE_NAME} ${NODE_CHAINCODE_INIT}
 
-  createJoinInstantiateWarmUp ${ORG1} "${ORG1}-${ORG3}" ${CHAINCODE_BILATERAL_NAME} ${CHAINCODE_BILATERAL_INIT}
+  createJoinInstantiateWarmUp ${ORG1} "${ORG1}-${ORG3}" ${NODE_CHAINCODE_NAME} ${NODE_CHAINCODE_INIT}
 
 elif [ "${MODE}" == "up-2" ]; then
   downloadArtifactsMember ${ORG2} common "${ORG1}-${ORG2}" "${ORG2}-${ORG3}"
@@ -739,12 +752,12 @@ elif [ "${MODE}" == "up-2" ]; then
   installAll ${ORG2}
 
   downloadChannelBlockFile ${ORG2} ${ORG1} common
-  joinWarmUp ${ORG2} common ${CHAINCODE_COMMON_NAME}
+  joinWarmUp ${ORG2} common ${NODE_CHAINCODE_NAME}
 
   downloadChannelBlockFile ${ORG2} ${ORG1} "${ORG1}-${ORG2}"
-  joinWarmUp ${ORG2} "${ORG1}-${ORG2}" ${CHAINCODE_BILATERAL_NAME}
+  joinWarmUp ${ORG2} "${ORG1}-${ORG2}" ${NODE_CHAINCODE_NAME}
 
-  createJoinInstantiateWarmUp ${ORG2} "${ORG2}-${ORG3}" ${CHAINCODE_BILATERAL_NAME} ${CHAINCODE_BILATERAL_INIT}
+  createJoinInstantiateWarmUp ${ORG2} "${ORG2}-${ORG3}" ${NODE_CHAINCODE_NAME} ${NODE_CHAINCODE_INIT}
 
 elif [ "${MODE}" == "up-3" ]; then
   downloadArtifactsMember ${ORG3} common "${ORG1}-${ORG3}" "${ORG2}-${ORG3}"
@@ -752,13 +765,13 @@ elif [ "${MODE}" == "up-3" ]; then
   installAll ${ORG3}
 
   downloadChannelBlockFile ${ORG3} ${ORG1} common
-  joinWarmUp ${ORG3} common ${CHAINCODE_COMMON_NAME}
+  joinWarmUp ${ORG3} common ${NODE_CHAINCODE_NAME}
 
   downloadChannelBlockFile ${ORG3} ${ORG2} "${ORG2}-${ORG3}"
-  joinWarmUp ${ORG3} "${ORG2}-${ORG3}" ${CHAINCODE_BILATERAL_NAME}
+  joinWarmUp ${ORG3} "${ORG2}-${ORG3}" ${NODE_CHAINCODE_NAME}
 
   downloadChannelBlockFile ${ORG3} ${ORG1} "${ORG1}-${ORG3}"
-  joinWarmUp ${ORG3} "${ORG1}-${ORG3}" ${CHAINCODE_BILATERAL_NAME}
+  joinWarmUp ${ORG3} "${ORG1}-${ORG3}" ${NODE_CHAINCODE_NAME}
 
 elif [ "${MODE}" == "logs" ]; then
   logs ${ORG}
