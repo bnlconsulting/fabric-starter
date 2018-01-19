@@ -53,7 +53,7 @@ services:
   api-base:
 #    build: ../server
 #    image: altoros/fabric-rest
-    image: maxxx1313/fabric-rest
+    image: bnlconsulting/fabric-rest
     volumes:
      - ../artifacts:/usr/src/artifacts
     command: npm start
