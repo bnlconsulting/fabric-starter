@@ -21,21 +21,21 @@ let Chaincode = class {
         console.info('============= START : Initialize Ledger ===========');
         let providers = [];
         providers.push({
-            credentialNumber:'h5j38dj49fj493',
-            lastName:'Phelps',
-            firstName:'Jason'
+            credentialNumber:'asdf',
+            lastName:'Doe',
+            firstName:'John'
         });
 
         providers.push({
-            credentialNumber:'h58dj49fj49',
-            lastName:'Phelps',
-            firstName:'Alex'
+            credentialNumber:'jkl',
+            lastName:'Doe',
+            firstName:'Jane'
         });
 
         providers.push({
-            credentialNumber:'h58dj4j43',
-            lastName:'Muller',
-            firstName:'George'
+            credentialNumber:'ajskdlf',
+            lastName:'Smith',
+            firstName:'John'
         });
 
         for (let i = 0; i < providers.length; i++) {
@@ -91,15 +91,13 @@ let Chaincode = class {
         let newProvider = JSON.parse(args[0]);
 
         newProvider.docType =  'provider';
-        console.log(JSON.stringify(newProvider));
 
-        let providerAsBytes = await stub.getState(newProvider.credentialNumber); //get the provider from chaincode state
+        let providerAsBytes = await stub.getState(newProvider.CredentialNumber); //get the provider from chaincode state
         if (!providerAsBytes || providerAsBytes.toString().length <= 0) {
             await stub.putState(newProvider.credentialNumber, Buffer.from(JSON.stringify(newProvider)));
         }else{
             throw new Error(newProvider.credentialNumber + ' already exist: ');
         }
-
 
         console.info('============= END : Create Provider ===========');
     }
@@ -114,7 +112,7 @@ let Chaincode = class {
 
         newProvider.docType =  'provider';
 
-        let providerAsBytes = await stub.getState(newProvider.credentialNumber); //get the provider from chaincode state
+        let providerAsBytes = await stub.getState(newProvider.CredentialNumber); //get the provider from chaincode state
         if (!providerAsBytes || providerAsBytes.toString().length <= 0) {
             throw new Error(newProvider.credentialNumber + ' does not exist: ');
         }else{
@@ -187,6 +185,22 @@ let Chaincode = class {
                 return allResults;
             }
         }
+    }
+
+    async getHistoryForProvider(stub, args, thisClass) {
+
+        if (args.length < 1) {
+            throw new Error('Incorrect number of arguments. Expecting 1')
+        }
+
+        let credentialNumber = args[0];
+        console.info('- start getHistoryForProvider: %s\n', credentialNumber);
+
+        let resultsIterator = await stub.getHistoryForKey(credentialNumber);
+        let method = thisClass['getAllResults'];
+        let results = await method(resultsIterator, true);
+
+        return Buffer.from(JSON.stringify(results));
     }
 };
 
