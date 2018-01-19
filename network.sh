@@ -324,7 +324,7 @@ function installChaincode() {
 #
 #    info "upgrading chaincode $n to peers of $org from ./chaincode/go/$p using $f and using language ${LANGUAGE}"
 #    docker-compose --file ${f} run --rm "cli.$org.$DOMAIN" bash -c "CORE_PEER_ADDRESS=peer0.$org.$DOMAIN:7051 peer chaincode upgrade -n $n -v $v --lang ${LANGUAGE} -p /opt/gopath/src/$p && CORE_PEER_ADDRESS=peer1.$org.$DOMAIN:7051 peer chaincode upgrade -n $n -v $v --lang ${LANGUAGE} -p /opt/gopath/src/$p"
-}
+#}
 
 
 function dockerComposeUp () {
