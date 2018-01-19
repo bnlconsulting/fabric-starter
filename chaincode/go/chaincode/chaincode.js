@@ -92,7 +92,7 @@ let Chaincode = class {
 
         newProvider.docType =  'provider';
 
-        let providerAsBytes = await stub.getState(newProvider.CredentialNumber); //get the provider from chaincode state
+        let providerAsBytes = await stub.getState(newProvider.credentialNumber); //get the provider from chaincode state
         if (!providerAsBytes || providerAsBytes.toString().length <= 0) {
             await stub.putState(newProvider.credentialNumber, Buffer.from(JSON.stringify(newProvider)));
         }else{
@@ -112,7 +112,7 @@ let Chaincode = class {
 
         newProvider.docType =  'provider';
 
-        let providerAsBytes = await stub.getState(newProvider.CredentialNumber); //get the provider from chaincode state
+        let providerAsBytes = await stub.getState(newProvider.credentialNumber); //get the provider from chaincode state
         if (!providerAsBytes || providerAsBytes.toString().length <= 0) {
             throw new Error(newProvider.credentialNumber + ' does not exist: ');
         }else{
