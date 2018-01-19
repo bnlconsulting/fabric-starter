@@ -4,13 +4,13 @@ starttime=$(date +%s)
 
 # defaults; export these variables before executing this script
 : ${DOMAIN:="example.com"}
-: ${IP_ORDERER:="54.234.201.67"}
+: ${IP_ORDERER:="54.111.1.204"}
 : ${ORG1:="a"}
 : ${ORG2:="b"}
 : ${ORG3:="c"}
-: ${IP1:="54.86.191.160"}
-: ${IP2:="54.243.0.168"}
-: ${IP3:="54.211.142.174"}
+: ${IP1:="54.111.1.201"}
+: ${IP2:="54.111.1.202"}
+: ${IP3:="54.111.1.203"}
 
 WGET_OPTS="--verbose -N"
 CLI_TIMEOUT=10000
@@ -313,6 +313,19 @@ function installChaincode() {
     docker-compose --file ${f} run --rm "cli.$org.$DOMAIN" bash -c "CORE_PEER_ADDRESS=peer0.$org.$DOMAIN:7051 peer chaincode install -n $n -v 1.0 --lang ${LANGUAGE} -p /opt/gopath/src/$p && CORE_PEER_ADDRESS=peer1.$org.$DOMAIN:7051 peer chaincode install -n $n -v 1.0 --lang ${LANGUAGE} -p /opt/gopath/src/$p"
 }
 
+#function updgradeChaincode() {
+#    org=$1
+#    n=$2
+#    v=$3
+#    c=$4
+#    # chaincode path is the same as chaincode name by convention: code of chaincode instruction lives in ./chaincode/go/instruction mapped to docker path /opt/gopath/src/instruction
+#    p=${n}
+#    f="ledger/docker-compose-${org}.yaml"
+#
+#    info "upgrading chaincode $n to peers of $org from ./chaincode/go/$p using $f and using language ${LANGUAGE}"
+#    docker-compose --file ${f} run --rm "cli.$org.$DOMAIN" bash -c "CORE_PEER_ADDRESS=peer0.$org.$DOMAIN:7051 peer chaincode upgrade -n $n -v $v --lang ${LANGUAGE} -p /opt/gopath/src/$p && CORE_PEER_ADDRESS=peer1.$org.$DOMAIN:7051 peer chaincode upgrade -n $n -v $v --lang ${LANGUAGE} -p /opt/gopath/src/$p"
+}
+
 
 function dockerComposeUp () {
   compose_file="ledger/docker-compose-$1.yaml"
@@ -383,7 +396,7 @@ function joinWarmUp() {
 
   joinChannel ${org} ${channel_name}
   sleep 7
-#  warmUpChaincode ${org} ${channel_name} ${chaincode_name}
+ #  warmUpChaincode ${org} ${channel_name} ${chaincode_name}
 }
 
 function createJoinInstantiateWarmUp() {
@@ -396,7 +409,7 @@ function createJoinInstantiateWarmUp() {
   joinChannel ${org} ${channel_name}
   instantiateChaincode ${org} ${channel_name} ${chaincode_name} ${chaincode_init}
   sleep 7
-#  warmUpChaincode ${org} ${channel_name} ${chaincode_name}
+ #  warmUpChaincode ${org} ${channel_name} ${chaincode_name}
 }
 
 function makeCertDirs() {
@@ -483,10 +496,10 @@ function downloadArtifactsMember() {
 }
 
 function downloadArtifactsOrderer() {
-#  for org in ${ORG1} ${ORG2} ${ORG3}
-#    do
-#      rm -rf "artifacts/crypto-config/peerOrganizations/$org.$DOMAIN"
-#    done
+ #  for org in ${ORG1} ${ORG2} ${ORG3}
+ #    do
+ #      rm -rf "artifacts/crypto-config/peerOrganizations/$org.$DOMAIN"
+ #    done
 
   makeCertDirs
   downloadMemberMSP
@@ -548,7 +561,7 @@ function devLogs () {
 
 function clean() {
   removeDockersFromCompose
-#  removeDockersWithDomain
+ #  removeDockersWithDomain
   removeUnwantedImages
   removeArtifacts
 }
@@ -639,6 +652,7 @@ function printHelp () {
   echo "      - 'restart' - restart the network"
   echo "      - 'generate' - generate required certificates and genesis block"
   echo "      - 'logs' - print and follow all docker instances log files"
+#  echo "      - 'upgrade' - Upgrades chaincode"
   echo
   echo "Typically, one would first generate the required certificates and "
   echo "genesis block, then bring up the network. e.g.:"
@@ -664,8 +678,6 @@ while getopts "h?m:o:a:w:c:0:1:2:3:4:5:k:l:" opt; do
     ;;
     w)  WWW_PORT=$OPTARG
     ;;
-    c)  CA_PORT=$OPTARG
-    ;;
     0)  PEER0_PORT=$OPTARG
     ;;
     1)  PEER0_EVENT_PORT=$OPTARG
@@ -678,9 +690,13 @@ while getopts "h?m:o:a:w:c:0:1:2:3:4:5:k:l:" opt; do
     ;;
     5)  COUCHDB1_PORT=$OPTARG
     ;;
-    k)  CHANNELS=$OPTARG
+    6)  CA_PORT=$OPTARG
+    ;;
+    c)  CHANNEL=$OPTARG
     ;;
     l)  LANGUAGE=$OPTARG
+    ;;
+    v)  VERSION=$OPTARG
     ;;
   esac
 done
@@ -775,6 +791,13 @@ elif [ "${MODE}" == "up-3" ]; then
 
 elif [ "${MODE}" == "logs" ]; then
   logs ${ORG}
+#elif [ "${MODE}" == "upgrade" ]; then
+#
+#  for chaincode_name in ${NODE_CHAINCODE_NAME}
+#  do
+#    updgradeChaincode ${ORG} ${chaincode_name} ${VERSION} ${CHANNEL}
+#  done
+
 elif [ "${MODE}" == "devup" ]; then
   devNetworkUp
 elif [ "${MODE}" == "devinstall" ]; then

@@ -76,11 +76,11 @@ After all containers are up, browse to each member's admin web app to transact o
 Tail logs of each member's docker containers by passing its name as organization `-o` argument:
 ```bash
 # orderer
-./network.sh -m logs -m example.com
+./network.sh -m logs -o example.com
 
 # members
-./network.sh -m logs -m a
-./network.sh -m logs -m b
+./network.sh -m logs -o a
+./network.sh -m logs -o b
 ```
 Stop all:
 ```bash
