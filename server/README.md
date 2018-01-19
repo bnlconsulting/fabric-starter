@@ -37,7 +37,7 @@ Known issues
 ------------
 
 * peer ID should be started with 'peer' word (specified in `network-config.json`).  
-  
+
   RIGHT:
 ```
    ...
@@ -68,3 +68,5 @@ Known issues
 * chaincode instantiate works with `peer1` exactly. no options here
 
 * admin UI uses `peer1` to get common info
+
+Fork of https://github.com/Altoros/fabric-rest
