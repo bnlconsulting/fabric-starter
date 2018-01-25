@@ -35,6 +35,11 @@ hfc.setConfigSetting('config', config);  // this config needed for client
 hfc.setConfigSetting('config-dir',  configDir);
 hfc.setConfigSetting('config-file', configFile);
 
+//set max grpx values hfc setConfigSetting calls fabric-client/lib/utils.js setConfigSetting
+hfc.setConfigSetting('grpc-max-send-message-length', -1);
+hfc.setConfigSetting('grpc-max-receive-message-length', -1);
+
+
 
 
 // you can always get config:
