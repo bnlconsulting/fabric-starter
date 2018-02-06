@@ -401,6 +401,7 @@ app.post('/channels/:channelName/chaincodes/:chaincodeName', function(req, res) 
     var peers = peersId.map(getPeerHostByCompositeID);
 
     var fcn = req.body.fcn;
+    req.body.args.username = req.username;
     var args = req.body.args;
     logger.debug('channelName  : ' + channelName);
     logger.debug('chaincodeName : ' + chaincodeName);
