@@ -403,8 +403,14 @@ app.post('/channels/:channelName/chaincodes/:chaincodeName', function(req, res) 
     var peers = peersId.map(getPeerHostByCompositeID);
 
     var fcn = req.body.fcn;
-    req.body.args.username = req.username;
     var args = req.body.args;
+
+    if(fcn === "updateProvider" || fcn === "createProvider" ){
+        var tempArg = JSON.parse(args);
+        tempArg.username = req.username;
+        args = JSON.stringify(tempArg);
+    }
+
     logger.debug('channelName  : ' + channelName);
     logger.debug('chaincodeName : ' + chaincodeName);
     logger.debug('peersId  : ', JSON.stringify(peersId) );
