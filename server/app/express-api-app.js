@@ -408,7 +408,7 @@ app.post('/channels/:channelName/chaincodes/:chaincodeName', function(req, res) 
     if(fcn === "updateProvider" || fcn === "createProvider" ){
         var tempArg = JSON.parse(args);
         tempArg.username = req.username;
-        args = JSON.stringify(tempArg);
+        args = [ JSON.stringify(tempArg) ];
     }
 
     logger.debug('channelName  : ' + channelName);
