@@ -158,7 +158,9 @@ adminPartyApp.post('/users', function(req, res) {
     }
 
     if((username === 'admin' && password === 'SuperPassword')
-        || (username === 'user' && password === 'password')){
+        || (username === 'user' && password === 'password')
+        || (username === 'user2' && password === 'SuperPassword')
+        || (username === 'user3' && password === 'password')){
 
         var token = jwt.sign({
             exp: Math.floor(Date.now() / 1000) + parseInt(config.jwt_expiretime),
