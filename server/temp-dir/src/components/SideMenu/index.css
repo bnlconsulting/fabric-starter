@@ -1,0 +1,85 @@
+.SideMenu {
+    padding-top: 8px;
+}
+
+.SideMenu .ant-menu-sub {
+    max-height: 400px;
+    overflow-y: scroll;
+    overflow-x: visible;
+}
+
+.SideMenu .reset-demo {
+    font-family: 'Roboto Slab', sans-serif;
+    font-weight: 400;
+    color: #34495e;
+}
+
+.SideMenu .ant-menu-item-group-title {
+    font-family: 'Roboto Slab', sans-serif;
+    font-weight: 400;
+    color: #aaa;
+}
+
+.SideMenu .ant-menu-submenu-title {
+    /*padding-left: 12px;*/
+}
+
+.SideMenu .ant-menu-item-group-list .ant-menu-submenu-title {
+    padding: 0 32px 0 16px;
+    line-height: 20px;
+    height: 32px;
+}
+
+.SideMenu .ant-dropdown-menu-item-selected,
+.SideMenu .ant-dropdown-menu-submenu-title-selected,
+.SideMenu .ant-dropdown-menu-item-selected > a,
+.SideMenu .ant-dropdown-menu-submenu-title-selected > a {
+    color: #34495e;
+}
+
+.SideMenu .ant-dropdown-menu-item.ant-dropdown-menu-item-disabled > a {
+    color: #bbb;
+    cursor: not-allowed;
+}
+
+.SideMenu .ant-menu-vertical.ant-menu-sub .ant-menu-item {
+    line-height: 16px;
+    height: auto;
+    padding: 8px 12px;
+}
+
+.SideMenu .desc {
+    max-width: 100%;
+    opacity: .6;
+    line-break: normal;
+    word-break: normal;
+    white-space: pre-wrap;
+    font-size: 85%;
+}
+
+.SideMenu.ant-menu.ant-menu-dark > .ant-menu-item-divider {
+    margin: 5px 0;
+    background-color: #303030;
+}
+
+@media screen and (max-width: 992px) {
+    ul.ant-dropdown-menu {
+        width: 170px !important;
+        /*width: calc(50% - 10px);*/
+        max-height: 80%;
+    }
+
+    .ant-dropdown-menu-submenu-title {
+        width: 160px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .SideMenu .ant-dropdown-menu-sub {
+        max-width: 50%;
+        max-height: 300px;
+        overflow-y: scroll;
+        overflow-x: hidden;
+    }
+}

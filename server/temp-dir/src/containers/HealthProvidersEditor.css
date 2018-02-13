@@ -1,0 +1,27 @@
+label {
+  float: left;
+  margin-right: 5em;
+}
+form {
+  display: block;
+}
+input {
+  display: inline-block;
+}
+.time-line {
+  maxHeight:436;
+  overflowY: auto;
+}
+.txDate{
+  max-width:100%;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.changes {
+  max-width:100%;
+  overflow-wrap: break-word
+}
+.differences {
+  padding-left: 10px;
+}
