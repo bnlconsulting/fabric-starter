@@ -17,7 +17,7 @@
     "dev"   :"CONFIG_FILE=\"../artifacts-dev/network-config.json\" npm -s start",
     "preset":"CONFIG_FILE=\"../artifacts-preset/network-config-local.json\" npm -s start",
     "test":"mocha",
-    "postinstall": "cd temp-dir && npm install && npm run-script build`"
+    "postinstall": "cd temp-dir && npm install && npm run-script build"
   },
   "license": "Apache-2.0",
   "dependencies": {
