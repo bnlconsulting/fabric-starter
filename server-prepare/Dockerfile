@@ -15,4 +15,6 @@ RUN apk add --update python make alpine-sdk libc6-compat \
     && npm install && npm cache rm \
     # remove node-gyp dependancies (for alpine only)
     # libc6-compat is essential for grps, so don't remove it
-    apk del --purge python make alpine-sdk
+    apk del --purge python make alpine-sdk \
+    && cd temp-dir && npm install && npm run-script build
+
