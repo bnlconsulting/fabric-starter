@@ -238,9 +238,9 @@ class HealthProvidersEditor extends Component {
                                         return (
 
                                             <Timeline.Item key={transaction.TxId}>
-                                                <div class="txDate"><strong>Date: </strong>{transaction.Timestamp.format('lll')}</div>
-                                                <div class="txDate"><strong>Tx: </strong>{transaction.TxId}</div>
-                                                <div class="changes"><strong>Changes {transaction.username ? "made by" : null}:</strong> {transaction.username}
+                                                <div className="txDate"><strong>Date: </strong>{transaction.Timestamp.format('lll')}</div>
+                                                <div className="txDate"><strong>Tx: </strong>{transaction.TxId}</div>
+                                                <div className="changes"><strong>Changes {transaction.username ? "made by" : null}:</strong> {transaction.username}
                                                     <div className="differences">
                                                         <DifferencesDisplay
                                                             differences={transaction.differences}
