@@ -7,7 +7,7 @@ LABEL com.bnlconsulting.version="0.10"
 WORKDIR /usr/src/app
 COPY . .
 
-WORKDIR /usr/src/app/temp-dir
+WORKDIR /usr/src/app/client-app
 RUN npm install && npm run-script build
 
 WORKDIR /usr/src/app

@@ -25,7 +25,7 @@ var autoloadMiddleware = require('./lib/express-middleware-autoload');
 // config
 const ORG      = process.env.ORG;
 const PORT     = process.env.PORT || 4000;
-const WEB_DIR  = process.env.WEB_DIR || 'temp-dir/build';
+const WEB_DIR  = process.env.WEB_DIR || 'client-app/build';
 const M_C_F    = process.env.MIDDLEWARE_CONFIG_FILE || './middleware/map.json';
 
 var clientEnv = {
