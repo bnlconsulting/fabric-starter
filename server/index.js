@@ -43,7 +43,7 @@ var apiApp   = require('./app/express-api-app')(); // TODO: this app still uses 
 
 app.get('/',            (req, res)=>res.redirect('/web') );
 app.use('/web',         webApp);
-app.use('/static',      (req, res)=>res.redirect('/web' + res.originalUrl) );
+app.use('/static',      (req, res)=>res.redirect('/web' + req.originalUrl) );
 app.get('/favicon.ico', webApp.handle.bind(webApp) );
 app.use('/admin',       adminApp);
 
