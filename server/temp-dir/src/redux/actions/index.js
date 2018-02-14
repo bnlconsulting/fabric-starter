@@ -23,7 +23,11 @@ export const createProvider = (provider) => {
 
         return api.createProvider(getState().providers.selectedOrg,  getState().providers.selectedPeer, getState().providers.selectedChannel, getState().providers.selectedChaincode, provider)
             .then(data => {
-                console.log(data);
+                //console.log(data);
+                history.push('/healthProviders/edit/'+ provider.credentialNumber)
+                getProvider(provider.credentialNumber)(dispatch, getState, api);
+                getProviderHistory(provider.credentialNumber)(dispatch, getState, api);
+                return data
             })
             .finally(() => {
                 dispatch({type: types.REQUEST_RETURNED});
