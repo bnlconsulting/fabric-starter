@@ -7,6 +7,8 @@ LABEL com.bnlconsulting.version="0.10"
 WORKDIR /usr/src/app
 COPY . .
 
+RUN cd temp-dir && npm install && npm run-script build && npm cache rm
+
 EXPOSE 4000
 
 CMD [ "npm", "start" ]
