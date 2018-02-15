@@ -250,6 +250,8 @@ adminPartyApp.post('/chaincodes', function(req, res) {
     var chaincodeName = req.body.chaincodeName;
     var chaincodePath = req.body.chaincodePath;
     var chaincodeVersion = req.body.chaincodeVersion;
+    var chaincodeType = req.body.chaincodeType;
+
     var peersId = req.body.peers || [];
     var peers   = peersId.map(getPeerHostByCompositeID);
 
@@ -257,6 +259,8 @@ adminPartyApp.post('/chaincodes', function(req, res) {
     logger.debug('chaincodeName : ' + chaincodeName);
     logger.debug('chaincodePath  : ' + chaincodePath);
     logger.debug('chaincodeVersion  : ' + chaincodeVersion);
+    logger.debug('chaincodeType  : ' + chaincodeType);
+
     if (!peers || peers.length === 0) {
         res.error(getErrorMessage('\'peers\''));
         return;
@@ -273,9 +277,13 @@ adminPartyApp.post('/chaincodes', function(req, res) {
         res.error(getErrorMessage('\'chaincodeVersion\''));
         return;
     }
+    if (!chaincodeType) {
+        res.error(getErrorMessage('\'chaincodeType\''));
+        return;
+    }
 
     res.promise(
-      install.installChaincode(peers, chaincodeName, chaincodePath, chaincodeVersion, USERNAME, ORG)
+      install.installChaincode(peers, chaincodeName, chaincodePath, chaincodeVersion, chaincodeType, USERNAME, ORG)
     );
 });
 
@@ -285,6 +293,7 @@ adminPartyApp.post('/channels/:channelName/chaincodes', function(req, res) {
     logger.debug('==================== INSTANTIATE CHAINCODE ==================');
     var chaincodeName    = req.body.chaincodeName;
     var chaincodeVersion = req.body.chaincodeVersion;
+    var chaincodeType = req.body.chaincodeType;
     var functionName = req.body.functionName;
     var channelName  = req.params.channelName;
     var args = req.body.args;
@@ -292,6 +301,8 @@ adminPartyApp.post('/channels/:channelName/chaincodes', function(req, res) {
     logger.debug('channelName  : ' + channelName);
     logger.debug('chaincodeName : ' + chaincodeName);
     logger.debug('chaincodeVersion  : ' + chaincodeVersion);
+    logger.debug('chaincodeType  : ' + chaincodeType);
+
     logger.debug('functionName  : ' + functionName);
     logger.debug('args  : ' + args);
 
@@ -301,6 +312,10 @@ adminPartyApp.post('/channels/:channelName/chaincodes', function(req, res) {
     }
     if (!chaincodeVersion) {
         res.error(getErrorMessage('\'chaincodeVersion\''));
+        return;
+    }
+    if (!chaincodeType) {
+        res.error(getErrorMessage('\'chaincodeType\''));
         return;
     }
     if (!functionName) {
@@ -314,7 +329,7 @@ adminPartyApp.post('/channels/:channelName/chaincodes', function(req, res) {
 
 
     res.promise(
-      instantiate.instantiateChaincode(channelName, chaincodeName, chaincodeVersion, functionName, args, USERNAME, ORG)
+      instantiate.instantiateChaincode(channelName, chaincodeName, chaincodeVersion, chaincodeType, functionName, args, USERNAME, ORG)
     );
 });
 

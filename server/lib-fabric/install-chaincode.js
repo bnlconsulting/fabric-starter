@@ -20,16 +20,17 @@ var logger = helper.getLogger('install-chaincode');
 
 
 // we must pass here admin user
-function installChaincode(peers, chaincodeName, chaincodePath, chaincodeVersion, username, org) {
+function installChaincode(peers, chaincodeName, chaincodePath, chaincodeVersion, chaincodeType, username, org) {
   logger.debug('\n============ Install chaincode on organizations ============\n');
   helper.setupChaincodeDeploy();
   return helper.getClientForOrg(username, org)
-    .then(client=>{
+    .then(client => {
 			var request = {
 				targets: helper.newPeers(peers),
 				chaincodePath: chaincodePath,
 				chaincodeId: chaincodeName,
-				chaincodeVersion: chaincodeVersion
+				chaincodeVersion: chaincodeVersion,
+				chaincodeType:chaincodeType //setting default chaincode type to node
 			};
 			return client.installChaincode(request);
 		}, (err) => {

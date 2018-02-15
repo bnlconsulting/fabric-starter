@@ -28,7 +28,7 @@ var eh = null;
 
 
 // must be called with admin credentials
-var instantiateChaincode = function(channelID, chaincodeName, chaincodeVersion, functionName, args, username, org) {
+var instantiateChaincode = function(channelID, chaincodeName, chaincodeVersion, chaincodeType, functionName, args, username, org) {
 	logger.debug('\n============ Instantiate chaincode on organization ' + org + ' ============\n');
 
   var channel;
@@ -51,6 +51,7 @@ var instantiateChaincode = function(channelID, chaincodeName, chaincodeVersion, 
         var request = {
             chaincodeId: chaincodeName,
             chaincodeVersion: chaincodeVersion,
+            chaincodeType:chaincodeType,
             fcn: functionName,
             args: args,
             txId: tx_id
