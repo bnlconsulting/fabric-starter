@@ -154,6 +154,13 @@ export const selectChannel = (channel) => {
     }
 };
 
+export const selectChaincode = (chaincode) => {
+    return {
+        type:types.SELECT_CHAINCODE,
+        data:chaincode
+    }
+};
+
 
 export const clearProvider = () => {
     return {

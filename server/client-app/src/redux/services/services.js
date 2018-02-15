@@ -59,7 +59,8 @@ function getChaincodes(peer, channel){
         uri: baseURI + '/chaincodes',
         qs:{
             peer:peer,
-            channel:channel
+            channel:channel,
+            type:'instantiated'
         },
         method: 'GET',
         headers:{
