@@ -46,7 +46,7 @@ const columns = [
         key: 'key',
         render:(text, record) =>{
             return ( <span>
-                <Link  to={"/healthProviders/edit/" + record.write.key}>{record.write.key}</Link>
+                <Link  to={"/healthProviders/edit/" + (record.write ? record.write.key : '')}>{record.write ? record.write.key : 'null'}</Link>
         </span> )
         }
     }
@@ -81,8 +81,8 @@ class HealthProvidersHistory extends Component {
                        rowKey="blockNumber"
                        expandedRowRender={record => {
                            let display = [];
-                           for(let property in record.write.value){
-                               display.push(<p className="historyWrite"><strong>{property}:</strong> {record.write.value[property]}</p>)
+                           for(let property in record.write ? record.write.value : []){
+                               display.push(<p className="historyWrite" key={property}><strong>{property}:</strong> {record.write.value[property]}</p>)
                            }
                            return (<div>
                                    {display}
