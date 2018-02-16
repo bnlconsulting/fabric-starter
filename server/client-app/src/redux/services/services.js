@@ -264,7 +264,7 @@ function getTxHistory(peer, channel){
                     block.txId = data.payload.header.channel_header.tx_id;
 
                     data.payload.data.actions.forEach(function(action){
-                        _.filter(action.payload.action.proposal_response_payload.extension.results.ns_rwset, {namespace:'chaincode'})
+                        _.reject(action.payload.action.proposal_response_payload.extension.results.ns_rwset, {namespace:'lscc'})
                             .forEach(function(rwSet){
                                 let write = rwSet.rwset.writes[0];
                                 write.value = JSON.parse(write.value);
@@ -294,7 +294,7 @@ function getTxHistory(peer, channel){
                                 block.txId = data.payload.header.channel_header.tx_id;
 
                                 data.payload.data.actions.forEach(function(action){
-                                    _.filter(action.payload.action.proposal_response_payload.extension.results.ns_rwset, {namespace:'chaincode'})
+                                    _.reject(action.payload.action.proposal_response_payload.extension.results.ns_rwset, {namespace:'lscc'})
                                         .forEach(function(rwSet){
                                             let write = rwSet.rwset.writes[0];
                                             write.value = JSON.parse(write.value);
