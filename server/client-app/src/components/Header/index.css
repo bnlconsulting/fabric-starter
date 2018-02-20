@@ -1,0 +1,10 @@
+.ant-spin {
+    margin-right: 16px;
+}
+
+.ant-layout-header {
+    color: #fff;
+    background: #42b5aa;
+    border-bottom: solid 1px #111;
+    padding: 0 25px;
+}
