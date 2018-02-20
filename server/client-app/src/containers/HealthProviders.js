@@ -22,15 +22,22 @@ const columns = [
     {
         title: 'Credential Number',
         dataIndex: 'Key',
-        key: 'credentialNumber'
+        key: 'credentialNumber',
+        defaultSortOrder: 'ascend',
+        sorter: (a, b) => a.Record.credentialNumber - b.Record.credentialNumber
     },{
         title: 'First Name',
         dataIndex: 'Record.firstName',
-        key: 'firstName'
+        key: 'firstName',
+        defaultSortOrder: 'ascend',
+        sorter: (a, b) => { return a.Record.firstName.localeCompare( b.Record.firstName)},
+        
     },{
         title: 'Last Name',
         dataIndex: 'Record.lastName',
-        key: 'lastName'
+        key: 'lastName',
+        defaultSortOrder: 'ascend',
+        sorter: (a, b) => { return a.Record.lastName.localeCompare( b.Record.lastName)}
     },{
         title: 'Middle Name',
         dataIndex: 'Record.middleName',
@@ -56,8 +63,7 @@ const columns = [
                 <Link  to={"/healthProviders/edit/" + record.Key}>Edit/Detail</Link>
         </span> )
         }
-
-    }
+    }   
 ];
 
 class HealthProviders extends Component {
