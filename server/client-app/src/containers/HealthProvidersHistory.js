@@ -77,6 +77,7 @@ class HealthProvidersHistory extends Component {
         return (
             <Card title="Transaction History">
                 <Table columns={columns}
+                       pagination={{ showSizeChanger:true, pageSizeOptions: ['10', '25', '50', '100'] }}
                        dataSource={this.props.txHistory}
                        rowKey="blockNumber"
                        expandedRowRender={record => {
