@@ -23,10 +23,10 @@ export const createProvider = (provider) => {
 
         return api.createProvider(getState().providers.selectedOrg,  getState().providers.selectedPeer, getState().providers.selectedChannel, getState().providers.selectedChaincode, provider)
             .then(data => {
-+                history.push('/healthProviders/edit/'+ provider.credentialNumber)
-+                getProvider(provider.credentialNumber)(dispatch, getState, api);
-+                getProviderHistory(provider.credentialNumber)(dispatch, getState, api);
-+                console.log(data);
+                +                history.push('/healthProviders/edit/'+ provider.credentialNumber)
+                +                getProvider(provider.credentialNumber)(dispatch, getState, api);
+                +                getProviderHistory(provider.credentialNumber)(dispatch, getState, api);
+                +                console.log(data);
             })
             .finally(() => {
                 dispatch({type: types.REQUEST_RETURNED});
@@ -106,6 +106,12 @@ export const getConfig = () => {
             .then(data => {
                 dispatch({type: types.ORG_RECEIVED, data:data.org});
                 dispatch({type: types.PEERS_RECEIVED, data:data.peers});
+           })
+            .then(() => {
+                return getChannels(getState().providers.selectedPeer)(dispatch, getState, api);
+            })
+            .then(() => {
+                return getChaincodes(getState().providers.selectedPeer, getState().providers.selectedChannel)(dispatch, getState, api);
             });
     }
 };
@@ -118,6 +124,7 @@ export const getChannels = (peer) => {
         return api.getChannels(peer)
             .then(data => {
                 dispatch({type: types.CHANNELS_RECEIVED, data:data});
+                return data;
             })
             .finally(() => {
                 dispatch({type: types.REQUEST_RETURNED});
@@ -133,6 +140,7 @@ export const getChaincodes = (peer, channel) => {
         return api.getChaincodes(peer, channel)
             .then(data => {
                 dispatch({type: types.CHAINCODES_FOR_CHANNEL_RECEIVED, data:data});
+                return data;
             })
             .finally(() => {
                 dispatch({type: types.REQUEST_RETURNED});

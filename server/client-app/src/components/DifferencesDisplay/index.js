@@ -15,7 +15,7 @@ class DifferenceDisplay extends Component {
                             return (
                                 <div key={this.props.transaction.TxId + index}>
                                     <div> <strong>{propSet.property}</strong> </div>
-                                    <div> {propSet.old ? (<i>{propSet.old + " :"}</i> ) : ""  }  { propSet.new} </div>
+                                    <div> {propSet.old ? (<i>{propSet.old + " :"}</i> ) : ""  }  { propSet.new} &nbsp;</div>
                                 </div>
 
                             );
@@ -29,7 +29,7 @@ class DifferenceDisplay extends Component {
                                 return (
                                     <div key={this.props.transaction.TxId + index}>
                                         <div> <strong>{propSet.property}</strong> </div>
-                                        <div> {propSet.old ? (<i>{propSet.old + " :"}</i> ) : ""  }  { propSet.new} </div>
+                                        <div> {propSet.old ? (<i>{propSet.old + " :"}</i> ) : ""  }  { propSet.new} &nbsp;</div>
                                     </div>                        );
                             })
                             }

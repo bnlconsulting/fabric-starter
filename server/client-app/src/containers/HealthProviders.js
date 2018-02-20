@@ -113,6 +113,7 @@ class HealthProviders extends Component {
                 <br/>
 
                 <Table columns={columns}
+                       pagination={{ showSizeChanger:true, pageSizeOptions: ['10', '25', '50', '100'] }}
                        dataSource={this.props.list}
                        rowKey="Key"
                        loading={this.props.running > 0}
