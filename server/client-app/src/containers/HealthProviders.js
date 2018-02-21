@@ -6,6 +6,8 @@ import { Link } from 'react-router-dom'
 
 import _ from 'lodash';
 
+//import { reqwest } from 'reqwest';
+
 //REDUX
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
@@ -23,14 +25,18 @@ const columns = [
         title: 'Credential Number',
         dataIndex: 'Key',
         key: 'credentialNumber',
+        sorter: true,
+        render: credentialNumber => `${credentialNumber}`,
         defaultSortOrder: 'ascend',
-        sorter: (a, b) => a.Record.credentialNumber - b.Record.credentialNumber
+        //sorter: (a, b) => { return a.Record.credentialNumber.localeCompare(b.Record.credentialNumber)},
     },{
         title: 'First Name',
         dataIndex: 'Record.firstName',
         key: 'firstName',
         defaultSortOrder: 'ascend',
-        sorter: (a, b) => { return a.Record.firstName.localeCompare( b.Record.firstName)},
+        sorter: true,
+        render: firstName => `${firstName}`,
+        //sorter: (a, b) => { return a.Record.firstName.localeCompare( b.Record.firstName)},
         
     },{
         title: 'Last Name',
@@ -67,6 +73,52 @@ const columns = [
 ];
 
 class HealthProviders extends Component {
+
+    state = {
+        data: [],
+        pagination: {},
+        loading: false,
+      };
+      handleTableChange = (pagination, filters, sorter) => {
+        const pager = { ...this.state.pagination };
+        pager.current = pagination.current;
+        this.setState({
+          pagination: pager,
+        });
+        this.fetch({
+          results: pagination.pageSize,
+          page: pagination.current,
+          sortField: sorter.field,
+          sortOrder: sorter.order,
+          ...filters,
+        });
+      }
+      fetch = (params = {}) => {
+        console.log('params:', params);
+        this.setState({ loading: true });
+        reqwest({
+          url: 'https://randomuser.me/api',
+          method: 'get',
+          data: {
+            results: 10,
+            ...params,
+          },
+          type: 'json',
+        }).then((data) => {
+          const pagination = { ...this.state.pagination };
+          // Read total count from server
+          // pagination.total = data.totalCount;
+          pagination.total = 200;
+          this.setState({
+            loading: false,
+            data: data.results,
+            pagination,
+          });
+        });
+      }
+      componentDidMount() {
+        this.fetch();
+      }
 
     constructor(props) {
         super(props);
