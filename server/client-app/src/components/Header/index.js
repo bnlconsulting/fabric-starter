@@ -1,6 +1,5 @@
 import './index.css';
 import React, {Component} from 'react';
-
 import logo from '../../logo.svg';
 
 //REDUX
