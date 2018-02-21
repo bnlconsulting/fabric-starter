@@ -10,8 +10,7 @@
 
 .outerDiv{
   position: relative;
-  top: 30%;
-  transform: translateY -50%;
+  top: 10%;
 }
 
 .loginForm {
@@ -23,4 +22,20 @@
   width: 750px;
   justify-content: center;
   align-items: center;
+}
+
+
+.signin {
+  height: 100%;
+  position: relative;
+  width: 100%;
+  text-align: center;
+}
+
+.signin img {
+  width: 240px;
+  height: 240px;
+  display: block ;
+  margin-left: auto;
+  margin-right: auto;
 }
