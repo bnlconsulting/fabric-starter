@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom'
 
 import _ from 'lodash';
 
-//import { reqwest } from 'reqwest';
+import { reqwest } from 'reqwest';
 
 //REDUX
 import {connect} from 'react-redux';
