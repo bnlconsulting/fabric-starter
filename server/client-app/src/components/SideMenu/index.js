@@ -10,8 +10,6 @@ import './index.css';
 
 const SubMenu = Menu.SubMenu;
 const MenuItemGroup = Menu.ItemGroup;
-const { Option } = Select;
-
 
 class SideMenu extends Component {
     render() {
@@ -48,18 +46,23 @@ class SideMenu extends Component {
                 <MenuItemGroup key="g2" title="Options">
                     <SubMenu key="peerSelection" title={<span><Icon type="share-alt"/><span>Peer Selection</span> <br/> {this.props.selectedPeer}</span>}>
                         { this.props.peers.map( peer => <Menu.Item key={peer}
-                                                                   style={{backgroundColor:this.props.selectedPeer===peer?'#42b5aa':'inherit'}}>{peer}
+                                                                   className={this.props.selectedPeer===peer ? 'ant-menu-item-selected' : '' }>
+                            {peer}
                         </Menu.Item> ) }
                     </SubMenu>
 
                     <SubMenu key="channelSelection" title={<span><Icon type="notification" /><span>Channel Selection</span> <br/> {this.props.selectedChannel}</span>}>
                         { this.props.channels.map( channel => <Menu.Item key={channel}
-                                                                         style={{backgroundColor:this.props.selectedChannel===channel?'#42b5aa':'inherit'}} >{channel}</Menu.Item> ) }
+                                                                         className={this.props.selectedChannel===channel ? 'ant-menu-item-selected' : '' } >
+                            {channel}
+                        </Menu.Item> ) }
                     </SubMenu>
 
                     <SubMenu key="chaincodeSelection" title={<span><Icon type="link"/><span>Chaincode Selection</span> <br/> {this.props.selectedChaincode}</span>}>
                         { this.props.chaincodes.map( chaincode => <Menu.Item key={chaincode}
-                                                                             style={{backgroundColor:this.props.selectedChaincode===chaincode?'#42b5aa':'inherit'}} >{chaincode}</Menu.Item> ) }
+                                                                             className={this.props.selectedChaincode===chaincode ? 'ant-menu-item-selected' : '' } >
+                            {chaincode}
+                        </Menu.Item> ) }
                     </SubMenu>
                 </MenuItemGroup >
             </Menu>

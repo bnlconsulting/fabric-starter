@@ -155,6 +155,8 @@ class HealthProviders extends Component {
 
 
     render() {
+        let historyLimit = 3;
+
         return (
             <Card title="Data Providers List">
 
@@ -170,43 +172,58 @@ class HealthProviders extends Component {
                        rowKey="Key"
                        loading={this.props.running > 0}
                        onExpand={this.onExpand}
-                       expandedRowRender={record => (<div>
+                       expandedRowRender={record => (<div style={{marginRight:((record.history || []).length <= 3) ? 50  : 'inherit'}}>
 
                            {/*AP60025716*/}
                            <Steps size="small"  >
                                {
                                    (record.history || [])
-                                       .slice(0, 4)
+                                       .slice(0, historyLimit)
                                        .map((transaction, index, collection) => {
+                                           return (
+                                               <Step key={transaction.TxId}
+                                                     icon={transaction.txOrder === 0
+                                                         ?   (<Icon type="check-circle-o" />)
+                                                         : index === 0
+                                                             ?    (<div className="custom-icon-provider current" >
+                                                                 <span>{transaction.txOrder + 1}</span>
+                                                             </div>)
+                                                             :    (<div className="custom-icon-provider past" >
+                                                                 <span>{transaction.txOrder + 1}</span>
+                                                             </div>)
+                                                     }
 
-                                       console.log(transaction);
-                                       return (
-                                           <Step key={transaction.TxId}
-                                               icon={transaction.txOrder === 0
-                                                   ?   (<Icon type="check-circle-o" />)
-                                                   : index === 0
-                                                       ?    (<div className="custom-icon-provider current" >
-                                                           <span>{transaction.txOrder + 1}</span>
-                                                       </div>)
-                                                       :    (<div className="custom-icon-provider past" >
-                                                           <span>{transaction.txOrder + 1}</span>
-                                                       </div>)
-                                               }
+                                                     title={transaction.txOrder === 0 ? "Created" : "Update"}
+                                                     description={
+                                                         <div>
+                                                             <div >{transaction.username}  </div>
+                                                             <div >{transaction.Timestamp.format('l LT')}</div>
+                                                             <DifferencesDisplay
+                                                                 differences={transaction.differences}
+                                                                 transaction={transaction}
+                                                                 limit={4}>
+                                                             </DifferencesDisplay>
+                                                         </div>
+                                                     } />
+                                           )
+                                       })
 
-                                               title={transaction.txOrder === 0 ? "Created" : "Update"}
-                                               description={
-                                               <div>
-                                                   <div >{transaction.username}  </div>
-                                                   <div >{transaction.Timestamp.format('l LT')}</div>
-                                                   <DifferencesDisplay
-                                                       differences={transaction.differences}
-                                                       transaction={transaction}
-                                                       limit={4}>
-                                                   </DifferencesDisplay>                                               </div>
-                                               } />
-                                       )
-                                   })
+
                                }
+
+                               {(record.history || []).length <= historyLimit ? '' :(
+                                   <Step key="more"
+                                         icon={ (<div className="custom-icon-provider past" >
+                                                 <Icon type="ellipsis" style={{verticalAlign: "text-top", marginTop: 1}} />
+                                             </div>
+
+                                         )  }
+                                         description={<Link  to={"/healthProviders/edit/" + record.Key} >
+                                             <div>View <br/>Full <br/>History</div>
+                                         </Link>}
+                                         />
+                               ) }
+
 
                            </Steps>
 

@@ -1,6 +1,7 @@
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import * as actions from "../redux/actions";
+import logo from '../logo.svg';
 
 import React, { Component } from 'react';
 
@@ -31,6 +32,13 @@ class Login extends Component {
   render() {
     const { getFieldDecorator } = this.props.form;
     return (<Row  xs={2} sm={4} md={6} lg={8} xl={10} className="outerDiv">
+
+            <Col offset={9} span={6}>
+                <div className="signin">
+                    <img src={logo} alt="Logo"/>
+                    <h1>Provider Chain</h1>
+                </div>
+            </Col>
             <Col offset={8} span={8}>
                 <div className="mainDiv">
                 <Form onSubmit={this.handleSubmit} className="login-form">
