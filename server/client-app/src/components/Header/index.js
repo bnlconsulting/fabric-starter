@@ -1,7 +1,7 @@
 import './index.css';
 import React, {Component} from 'react';
-import socketIOClient  from 'socket.io-client';
 
+import logo from '../../logo.svg';
 
 //REDUX
 import {connect} from 'react-redux';
@@ -29,10 +29,14 @@ class Header extends Component {
 
         return (
             <LayoutHeader>
+                <div className="logo">
+                    <img src={logo} alt="Logo"/>
+                    <h1>Provider-Chain</h1>
+                </div>
                 <div style={{float:'right'}}>
                     <Spin size="large" spinning={this.props.running > 0}  />
                     <Dropdown overlay={menu} trigger={['click']}>
-                        <span><Icon type="menu-unfold" style={{color:'white'}}/></span>
+                        <span><Icon type="setting" style={{color:'white', fontSize:24}}/></span>
                     </Dropdown>
                 </div>
             </LayoutHeader>
