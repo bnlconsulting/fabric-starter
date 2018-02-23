@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom'
 
 import _ from 'lodash';
 
-import { reqwest } from 'reqwest';
+import reqwest  from 'reqwest';
 
 //REDUX
 import {connect} from 'react-redux';
@@ -26,24 +26,15 @@ const columns = [
         dataIndex: 'Key',
         key: 'credentialNumber',
         sorter: true,
-        render: credentialNumber => `${credentialNumber}`,
-        defaultSortOrder: 'ascend',
-        //sorter: (a, b) => { return a.Record.credentialNumber.localeCompare(b.Record.credentialNumber)},
     },{
         title: 'First Name',
         dataIndex: 'Record.firstName',
         key: 'firstName',
-        defaultSortOrder: 'ascend',
-        sorter: true,
-        render: firstName => `${firstName}`,
-        //sorter: (a, b) => { return a.Record.firstName.localeCompare( b.Record.firstName)},
-        
     },{
         title: 'Last Name',
         dataIndex: 'Record.lastName',
         key: 'lastName',
-        defaultSortOrder: 'ascend',
-        sorter: (a, b) => { return a.Record.lastName.localeCompare( b.Record.lastName)}
+        sorter: true
     },{
         title: 'Middle Name',
         dataIndex: 'Record.middleName',
@@ -73,53 +64,30 @@ const columns = [
 ];
 
 class HealthProviders extends Component {
-
     state = {
         data: [],
         pagination: {},
         loading: false,
-      };
-      handleTableChange = (pagination, filters, sorter) => {
+    };
+    handleTableChange = (pagination, filters, sorter) => {
         const pager = { ...this.state.pagination };
         pager.current = pagination.current;
         this.setState({
-          pagination: pager,
+            pagination: pager,
         });
-        this.fetch({
-          results: pagination.pageSize,
-          page: pagination.current,
-          sortField: sorter.field,
-          sortOrder: sorter.order,
-          ...filters,
-        });
-      }
-      fetch = (params = {}) => {
-        console.log('params:', params);
-        this.setState({ loading: true });
-        reqwest({
-          url: 'https://randomuser.me/api',
-          method: 'get',
-          data: {
-            results: 10,
-            ...params,
-          },
-          type: 'json',
-        }).then((data) => {
-          const pagination = { ...this.state.pagination };
-          // Read total count from server
-          // pagination.total = data.totalCount;
-          pagination.total = 200;
-          this.setState({
-            loading: false,
-            data: data.results,
-            pagination,
-          });
-        });
-      }
-      componentDidMount() {
+        
+        if (sorter.column) {
+            let temp = {};
+            temp[sorter.column.key] = sorter.order === "descend" ? "desc" : sorter.order.substring(0,3);
+            this.state.sort = { sort: [temp] };
+        } else {
+            this.state.sort = null;
+        }
+        this.props.getProviderData( _.merge(this.state.search, this.state.sort));
+    }
+    /*componentDidMount() {
         this.fetch();
-      }
-
+      }*/
     constructor(props) {
         super(props);
 
@@ -171,6 +139,7 @@ class HealthProviders extends Component {
                        dataSource={this.props.list}
                        rowKey="Key"
                        loading={this.props.running > 0}
+                       onChange={this.handleTableChange}
                        onExpand={this.onExpand}
                        expandedRowRender={record => (<div style={{marginRight:((record.history || []).length <= 3) ? 50  : 'inherit'}}>
 
