@@ -112,11 +112,12 @@ class HealthProviders extends Component {
         
         if (sorter.column) {
             let temp = {};
-            temp[sorter.column.key] = sorter.order === "descend" ? "desc" : "asc" ;
-            this.state.sort = { sort: [temp] };
+            temp[sorter.columnKey] = sorter.order === "descend" ? "desc" : "asc" ;
+            this.state.sort = { sort: [sorter.columnKey] };
         } else {
             this.state.sort = null;
         }
+        console.log(sorter);
         this.props.getProviderData( _.merge(this.state.search, this.state.sort));
     }
 
