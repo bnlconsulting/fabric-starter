@@ -98,7 +98,7 @@ class HealthProviders extends Component {
         if (value === ''){
             this.state.search = {   "selector":{docType:"provider"}  };
         }else{
-            this.state.search = { "selector": { docType: "provider", $or: [{ firstName: value }, { middleName: value }, { lastName: value }, { credentialNumber: value }, { expirationDate: value }, { status: value }, { credentialType:value } ]}, use_index:[ "indexLastNameDoc","indexLastName" ]   };
+            this.state.search = { "selector": { docType: "provider", $or: [{ firstName: value }, { middleName: value }, { lastName: value }, { credentialNumber: value }, { expirationDate: value }, { status: value }, { credentialType:value } ]}  };
         }
         this.props.getProviderData( _.merge(this.state.search, this.state.sort));
     }
@@ -107,18 +107,16 @@ class HealthProviders extends Component {
         const pager = { ...this.state.pagination };
         pager.current = pagination.current;
         this.setState({
-            pagination: pager,
+            pagination: pager
         });
-        
         if (sorter.column) {
             let temp = {};
-            temp[sorter.columnKey] = sorter.order === "descend" ? "desc" : "asc" ;
-            this.state.sort = { sort: [sorter.columnKey] };
+            temp[sorter.column.key] = sorter.order === "descend" ? "desc" : "asc" ;
+            this.state.sort = { sort: [temp] };
         } else {
             this.state.sort = null;
         }
-        console.log(sorter);
-        this.props.getProviderData( _.merge(this.state.search, this.state.sort));
+        this.props.getProviderData( _.merge({}, this.state.search, this.state.sort));
     }
 
 
