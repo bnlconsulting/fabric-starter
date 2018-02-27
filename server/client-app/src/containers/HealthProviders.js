@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom'
 
 import _ from 'lodash';
 
+
 //REDUX
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
@@ -22,32 +23,40 @@ const columns = [
     {
         title: 'Credential Number',
         dataIndex: 'Key',
-        key: 'credentialNumber'
+        key: 'credentialNumber',
+        sorter: true,
     },{
         title: 'First Name',
         dataIndex: 'Record.firstName',
-        key: 'firstName'
+        key: 'firstName',
+        sorter: true
+        //render: firstName => `${firstName}`
     },{
         title: 'Last Name',
         dataIndex: 'Record.lastName',
-        key: 'lastName'
+        key: 'lastName',
+        sorter: true,
     },{
         title: 'Middle Name',
         dataIndex: 'Record.middleName',
-        key: 'middleName'
+        key: 'middleName',
+        sorter: true
     },{
         title: 'Type',
         dataIndex: 'Record.credentialType',
         key: 'credentialType',
         width: 300,
+        sorter: true
     },{
         title: 'Status',
         dataIndex: 'Record.status',
-        key: 'status'
+        key: 'status',
+        sorter: true
     },{
         title: 'Expiration',
         dataIndex: 'Record.expirationDate',
-        key: 'expirationDate'
+        key: 'expirationDate',
+        sorter: true
     },{
         title: 'Action',
         key: 'edit',
@@ -56,16 +65,22 @@ const columns = [
                 <Link  to={"/healthProviders/edit/" + record.Key}>Edit/Detail</Link>
         </span> )
         }
-
-    }
+    }   
 ];
 
 class HealthProviders extends Component {
-
+    state = {
+        pagination: {},
+        sort: {},
+        search: {
+            "selector": { docType: "provider", lastName:{$gt: null}, middleName:{$gt:null}, credentialNumber:{$gt:null}, firstName:{$gt:null}, expirationDate:{$gt:null}, status:{$gt:null}, credentialType:{$gt:null} }
+        }
+    };
     constructor(props) {
         super(props);
 
         this.updateSearch = this.updateSearch.bind(this);
+        this.handleTableChange = this.handleTableChange.bind(this);
     }
 
     componentWillReceiveProps(nextProps){
@@ -80,13 +95,29 @@ class HealthProviders extends Component {
     }
 
     updateSearch(value){
-        let search = {};
         if (value === ''){
-            search = {   "selector":{docType:"provider", index:{$lt:1000}}    };
+            this.state.search = {   "selector":{docType:"provider"}  };
         }else{
-            search = {   "selector":{docType:"provider", $or:[{firstName: value}, {lastName: value}, {credentialNumber:value}]}    };
+            this.state.search = { "selector": { docType: "provider", $or: [{ firstName: value }, { middleName: value }, { lastName: value }, { credentialNumber: value }, { expirationDate: value }, { status: value }, { credentialType:value } ]}, use_index:[ "indexLastNameDoc","indexLastName" ]   };
         }
-        this.props.getProviderData( search);
+        this.props.getProviderData( _.merge(this.state.search, this.state.sort));
+    }
+
+    handleTableChange = (pagination, filters, sorter) => {
+        const pager = { ...this.state.pagination };
+        pager.current = pagination.current;
+        this.setState({
+            pagination: pager,
+        });
+        
+        if (sorter.column) {
+            let temp = {};
+            temp[sorter.column.key] = sorter.order === "descend" ? "desc" : "asc" ;
+            this.state.sort = { sort: [temp] };
+        } else {
+            this.state.sort = null;
+        }
+        this.props.getProviderData( _.merge(this.state.search, this.state.sort));
     }
 
 
@@ -113,6 +144,7 @@ class HealthProviders extends Component {
                        dataSource={this.props.list}
                        rowKey="Key"
                        loading={this.props.running > 0}
+                       onChange={this.handleTableChange}
                        onExpand={this.onExpand}
                        expandedRowRender={record => (<div style={{marginRight:((record.history || []).length <= 3) ? 50  : 'inherit'}}>
 
