@@ -100,7 +100,7 @@ class HealthProviders extends Component {
         }else{
             this.state.search = { "selector": { docType: "provider", $or: [{ firstName: value }, { middleName: value }, { lastName: value }, { credentialNumber: value }, { expirationDate: value }, { status: value }, { credentialType:value } ]}, use_index:[ "indexLastNameDoc","indexLastName" ]   };
         }
-        this.props.getProviderData( _.merge(this.state.search, this.state.sort));
+        this.props.getProviderData( _.merge({}, this.state.search, this.state.sort));
     }
 
     handleTableChange = (pagination, filters, sorter) => {
@@ -117,7 +117,7 @@ class HealthProviders extends Component {
         } else {
             this.state.sort = null;
         }
-        this.props.getProviderData( _.merge(this.state.search, this.state.sort));
+        this.props.getProviderData( _.merge({}, this.state.search, this.state.sort));
     }
 
 
