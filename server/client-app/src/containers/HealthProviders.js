@@ -6,7 +6,6 @@ import { Link } from 'react-router-dom'
 
 import _ from 'lodash';
 
-import reqwest  from 'reqwest';
 
 //REDUX
 import {connect} from 'react-redux';
@@ -30,28 +29,34 @@ const columns = [
         title: 'First Name',
         dataIndex: 'Record.firstName',
         key: 'firstName',
+        sorter: true
+        //render: firstName => `${firstName}`
     },{
         title: 'Last Name',
         dataIndex: 'Record.lastName',
         key: 'lastName',
-        sorter: true
+        sorter: true,
     },{
         title: 'Middle Name',
         dataIndex: 'Record.middleName',
-        key: 'middleName'
+        key: 'middleName',
+        sorter: true
     },{
         title: 'Type',
         dataIndex: 'Record.credentialType',
         key: 'credentialType',
         width: 300,
+        sorter: true
     },{
         title: 'Status',
         dataIndex: 'Record.status',
-        key: 'status'
+        key: 'status',
+        sorter: true
     },{
         title: 'Expiration',
         dataIndex: 'Record.expirationDate',
-        key: 'expirationDate'
+        key: 'expirationDate',
+        sorter: true
     },{
         title: 'Action',
         key: 'edit',
@@ -65,33 +70,17 @@ const columns = [
 
 class HealthProviders extends Component {
     state = {
-        data: [],
         pagination: {},
-        loading: false,
-    };
-    handleTableChange = (pagination, filters, sorter) => {
-        const pager = { ...this.state.pagination };
-        pager.current = pagination.current;
-        this.setState({
-            pagination: pager,
-        });
-        
-        if (sorter.column) {
-            let temp = {};
-            temp[sorter.column.key] = sorter.order === "descend" ? "desc" : sorter.order.substring(0,3);
-            this.state.sort = { sort: [temp] };
-        } else {
-            this.state.sort = null;
+        sort: {},
+        search: {
+            "selector": { docType: "provider", lastName:{$gt: null}, middleName:{$gt:null}, credentialNumber:{$gt:null}, firstName:{$gt:null}, expirationDate:{$gt:null}, status:{$gt:null}, credentialType:{$gt:null} }
         }
-        this.props.getProviderData( _.merge(this.state.search, this.state.sort));
-    }
-    /*componentDidMount() {
-        this.fetch();
-      }*/
+    };
     constructor(props) {
         super(props);
 
         this.updateSearch = this.updateSearch.bind(this);
+        this.handleTableChange = this.handleTableChange.bind(this);
     }
 
     componentWillReceiveProps(nextProps){
@@ -106,13 +95,30 @@ class HealthProviders extends Component {
     }
 
     updateSearch(value){
-        let search = {};
         if (value === ''){
-            search = {   "selector":{docType:"provider", index:{$lt:1000}}    };
+            this.state.search = {   "selector":{docType:"provider"}  };
         }else{
-            search = {   "selector":{docType:"provider", $or:[{firstName: value}, {lastName: value}, {credentialNumber:value}]}    };
+            this.state.search = { "selector": { docType: "provider", $or: [{ firstName: value }, { middleName: value }, { lastName: value }, { credentialNumber: value }, { expirationDate: value }, { status: value }, { credentialType:value } ]}, use_index:[ "indexLastNameDoc","indexLastName" ]   };
         }
-        this.props.getProviderData( search);
+        this.props.getProviderData( _.merge(this.state.search, this.state.sort));
+    }
+
+    handleTableChange = (pagination, filters, sorter) => {
+        const pager = { ...this.state.pagination };
+        pager.current = pagination.current;
+        this.setState({
+            pagination: pager,
+        });
+        
+        if (sorter.column) {
+            let temp = {};
+            temp[sorter.column.key] = sorter.order === "descend" ? "desc" : "asc" ;
+            this.state.sort = { sort: [temp] };
+            console.log(this.state.sort);
+        } else {
+            this.state.sort = null;
+        }
+        this.props.getProviderData( _.merge(this.state.search, this.state.sort));
     }
 
 

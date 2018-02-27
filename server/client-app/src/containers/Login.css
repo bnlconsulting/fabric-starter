@@ -8,6 +8,14 @@
   padding-bottom: 0px;
 }
 
+body{
+  background-color: #aaa;
+}
+
+h1{
+  color: white;
+}
+
 .outerDiv{
   position: relative;
   top: 10%;
