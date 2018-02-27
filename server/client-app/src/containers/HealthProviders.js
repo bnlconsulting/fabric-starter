@@ -114,7 +114,6 @@ class HealthProviders extends Component {
             let temp = {};
             temp[sorter.column.key] = sorter.order === "descend" ? "desc" : "asc" ;
             this.state.sort = { sort: [temp] };
-            console.log(this.state.sort);
         } else {
             this.state.sort = null;
         }
