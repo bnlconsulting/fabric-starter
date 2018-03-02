@@ -1,11 +1,12 @@
+//REACT
 import React, { Component } from 'react';
+
+//PERSONAL
 import './HealthProviders.css';
 import DifferencesDisplay from '../components/DifferencesDisplay'
 
-import { Link } from 'react-router-dom'
-
+//LODASH
 import _ from 'lodash';
-
 
 //REDUX
 import {connect} from 'react-redux';
@@ -13,7 +14,12 @@ import {bindActionCreators} from 'redux';
 import * as actions from "../redux/actions";
 
 //antD
-import { Table, Input, Card, Steps, Icon, Popover} from 'antd';
+import { Table, Input, Card, Steps, Icon } from 'antd';
+
+//REACT ROUTER
+import { Link } from 'react-router-dom'
+
+
 const Search = Input.Search;
 const Step = Steps.Step;
 
@@ -30,7 +36,6 @@ const columns = [
         dataIndex: 'Record.firstName',
         key: 'firstName',
         sorter: true
-        //render: firstName => `${firstName}`
     },{
         title: 'Last Name',
         dataIndex: 'Record.lastName',

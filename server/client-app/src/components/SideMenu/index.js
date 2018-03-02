@@ -1,12 +1,19 @@
-import React, {Component} from 'react';
+//REACT
+import React, { Component } from 'react';
+
+//REDUX
 import {connect} from 'react-redux';
-import {bindActionCreators} from 'redux';
-import {Menu, Select, Icon} from 'antd';
-
-import { Link } from 'react-router-dom'
-
+import { bindActionCreators } from 'redux';
 import * as actions from '../../redux/actions';
+
+//antD
+import { Menu, Icon } from 'antd';
+
+//INTERNAL
 import './index.css';
+
+//REACT ROUTER
+import { Link } from 'react-router-dom'
 
 const SubMenu = Menu.SubMenu;
 const MenuItemGroup = Menu.ItemGroup;

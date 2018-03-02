@@ -1,12 +1,16 @@
+//REACT
 import React, { Component } from 'react';
-import {Router, Route, Switch} from "react-router-dom";
+
+//REDUX
 import history from './redux/history';
 
-
+//INTERNAL
 import './App.css';
-
 import ProtectedRoute from "./containers/ProtectedRoute";
 import Login from "./containers/Login";
+
+//REACT ROUTER
+import { Router, Route, Switch } from "react-router-dom";
 
 class App extends Component {
     render() {

@@ -1,4 +1,7 @@
+//INTERNAL
 import * as types from '../actions/action-types';
+
+//LODASH
 import _ from 'lodash';
 
 const defaults = {

@@ -1,21 +1,19 @@
-/**
- * Created by jason.phelps on 1/10/2018.
- */
+//REACT
 import React, { Component } from 'react';
-
-import { Link } from 'react-router-dom'
 
 //REDUX
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import * as actions from "../redux/actions";
 
-//styles
+//antD
+import { Table, Card } from 'antd';
+
+//INTERNAL
 import './HealthProvidersHistory.css';
 
-//antD
-import { Table, Input, Card } from 'antd';
-const Search = Input.Search;
+//REACT ROUTER
+import { Link } from 'react-router-dom'
 
 const columns = [
     {
@@ -26,16 +24,10 @@ const columns = [
         title: 'Transaction',
         dataIndex: 'txId',
         key: 'txId',
-        // width: 300,
     },{
         title: 'Date',
         dataIndex: 'timestamp',
         key: 'timestamp',
-        // render:(text, record) =>{
-        //     return ( <span>
-        //         <Link  to={"/healthProviders/edit/" + record.Key}>Edit</Link>
-        // </span> )
-        // }
     },{
         title: 'User',
         dataIndex: 'username',
