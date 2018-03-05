@@ -1,6 +1,8 @@
-import {createStore, applyMiddleware, compose} from 'redux';
+//REDUX
+import { createStore, applyMiddleware, compose } from 'redux';
 import thunkMiddleware from 'redux-thunk';
 
+//INTERNAL
 import api from './services/services';
 import rootReducer from './reducers';
 import {initialize} from './actions';

@@ -1,25 +1,24 @@
-/**
- * Created by jason.phelps on 1/21/2018.
- */
+//REACT
 import React, { Component } from 'react';
-import {Router, Route, Switch, Redirect} from "react-router-dom";
-import history from '../redux/history';
-
 
 //REDUX
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import * as actions from "../redux/actions";
+import history from '../redux/history';
 
+//antD
+import {Layout } from 'antd';
+
+//INTERNAL
 import HealthProviders from "./HealthProviders";
 import HealthProvidersEditor from "./HealthProvidersEditor";
 import HealthProvidersHistory from "./HealthProvidersHistory";
-
-
 import Header from "../components/Header";
 import SideMenu from "../components/SideMenu";
 
-import {Layout } from 'antd';
+//REACT ROUTER
+import {Router, Route, Switch, Redirect} from "react-router-dom";
 
 const { Content, Sider} = Layout;
 

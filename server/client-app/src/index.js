@@ -1,3 +1,4 @@
+//REACT
 import React from 'react';
 import ReactDOM from 'react-dom';
 
@@ -10,6 +11,7 @@ import {LocaleProvider} from 'antd';
 import enUS from 'antd/lib/locale-provider/en_US';
 import 'antd/dist/antd.css';
 
+//INTERNAL
 import './index.css';
 import App from './App';
 

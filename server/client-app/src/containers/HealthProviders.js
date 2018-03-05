@@ -1,11 +1,12 @@
+//REACT
 import React, { Component } from 'react';
+
+//PERSONAL
 import './HealthProviders.css';
 import DifferencesDisplay from '../components/DifferencesDisplay'
 
-import { Link } from 'react-router-dom'
-
+//LODASH
 import _ from 'lodash';
-
 
 //REDUX
 import {connect} from 'react-redux';
@@ -13,7 +14,12 @@ import {bindActionCreators} from 'redux';
 import * as actions from "../redux/actions";
 
 //antD
-import { Table, Input, Card, Steps, Icon, Popover} from 'antd';
+import { Table, Input, Card, Steps, Icon } from 'antd';
+
+//REACT ROUTER
+import { Link } from 'react-router-dom'
+
+
 const Search = Input.Search;
 const Step = Steps.Step;
 
@@ -30,7 +36,6 @@ const columns = [
         dataIndex: 'Record.firstName',
         key: 'firstName',
         sorter: true
-        //render: firstName => `${firstName}`
     },{
         title: 'Last Name',
         dataIndex: 'Record.lastName',
@@ -98,7 +103,7 @@ class HealthProviders extends Component {
         if (value === ''){
             this.state.search = {   "selector":{docType:"provider"}  };
         }else{
-            this.state.search = { "selector": { docType: "provider", $or: [{ firstName: value }, { middleName: value }, { lastName: value }, { credentialNumber: value }, { expirationDate: value }, { status: value }, { credentialType:value } ]}, use_index:[ "indexLastNameDoc","indexLastName" ]   };
+            this.state.search = { "selector": { docType: "provider", $or: [{ firstName: value }, { middleName: value }, { lastName: value }, { credentialNumber: value }, { expirationDate: value }, { status: value }, { credentialType:value } ]}  };
         }
         this.props.getProviderData( _.merge({}, this.state.search, this.state.sort));
     }
@@ -107,9 +112,8 @@ class HealthProviders extends Component {
         const pager = { ...this.state.pagination };
         pager.current = pagination.current;
         this.setState({
-            pagination: pager,
+            pagination: pager
         });
-        
         if (sorter.column) {
             let temp = {};
             temp[sorter.column.key] = sorter.order === "descend" ? "desc" : "asc" ;

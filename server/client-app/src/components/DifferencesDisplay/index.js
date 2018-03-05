@@ -1,9 +1,9 @@
-import React, {Component} from 'react';
+//REACT
+import React, { Component } from 'react';
 
+//antD
 import {Popover} from 'antd';
 
-
-import './index.css';
 
 class DifferenceDisplay extends Component {
     render() {

@@ -1,5 +1,5 @@
+//REACT
 import React, { Component } from 'react';
-import DifferencesDisplay from '../components/DifferencesDisplay'
 
 //REDUX
 import {connect} from 'react-redux';
@@ -7,10 +7,13 @@ import {bindActionCreators} from 'redux';
 import * as actions from "../redux/actions";
 
 //antD
-import { Form, Row, Col, Input, Button, Timeline, Card, DatePicker} from 'antd';
-import './HealthProvidersEditor.css';
-const FormItem = Form.Item;
+import { Form, Row, Col, Input, Button, Timeline, Card, DatePicker } from 'antd';
 
+//INTERNAL
+import DifferencesDisplay from '../components/DifferencesDisplay'
+import './HealthProvidersEditor.css';
+
+const FormItem = Form.Item;
 
 class HealthProvidersEditor extends Component {
 
@@ -74,13 +77,6 @@ class HealthProvidersEditor extends Component {
                 }else{
                     this.props.createProvider(valuesClone);
                 }
-
-
-                // if(props.match.params.id)
-                //     setTimeout(function(){
-                //         // props.getProvider( props.match.params.id );
-                //         props.getProviderHistory( props.match.params.id );
-                //     }, 3000)
             }
         });
     };

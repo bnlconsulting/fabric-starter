@@ -1,6 +1,13 @@
+//REQUEST
 import request from 'request-promise-native';
+
+//LODASH
 import _ from 'lodash';
+
+//MOMENT
 import moment from 'moment';
+
+//CHANGECASE
 import changeCase from 'change-case';
 
 let token = null;

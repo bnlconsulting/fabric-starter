@@ -1,16 +1,19 @@
-import './index.css';
+//REACT
 import React, {Component} from 'react';
-import logo from '../../logo.svg';
 
 //REDUX
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import * as actions from "../../redux/actions";
 
-import { Layout, Select, Button, Spin, Row, Col, Menu, Dropdown, Icon} from 'antd';
+//antD
+import { Layout, Spin, Menu, Dropdown, Icon } from 'antd';
+
+//INTERNAL
+import './index.css';
+import logo from '../../logo.svg';
+
 const { Header:LayoutHeader } = Layout;
-const { Option } = Select;
-const SubMenu = Menu.SubMenu;
 
 
 class Header extends Component {

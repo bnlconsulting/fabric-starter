@@ -1,12 +1,16 @@
-import {connect} from 'react-redux';
-import {bindActionCreators} from 'redux';
-import * as actions from "../redux/actions";
-import logo from '../logo.svg';
-
+//REACT
 import React, { Component } from 'react';
 
+//REDUX
+import { connect } from 'react-redux';
+import {bindActionCreators} from 'redux';
+import * as actions from "../redux/actions";
+
+//antdD
 import { Form, Icon, Input, Button, Row, Col} from 'antd';
 
+//INTERNAL
+import logo from '../logo.svg';
 import './Login.css';
 
 const FormItem = Form.Item;
