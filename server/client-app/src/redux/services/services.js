@@ -109,7 +109,7 @@ function createProvider(org, peer, channel, chaincode, healthProvider){
         uri: baseURI + '/channels/' + channel + '/chaincodes/' + chaincode,
         body:{
             "peers":[ org + '/' + peer ],
-            "fcn":"testUpgrade",
+            "fcn":"createProvider",
             "args":[ JSON.stringify(healthProvider) ]
         },
         method: 'POST',
