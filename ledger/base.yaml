@@ -51,12 +51,10 @@ services:
     working_dir: /etc/hyperledger/artifacts
 
   api-base:
-#    build: ../server
-#    image: altoros/fabric-rest
     image: bnlconsulting/fabric-rest
     volumes:
      - ../artifacts:/usr/src/artifacts
-    command: npm start
+    command: [sh, -c, "sleep 60 && npm start"]
 
   www-base:
     image: nginx
