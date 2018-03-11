@@ -7,6 +7,7 @@
 'use strict';
 const shim = require('fabric-shim');
 const util = require('util');
+const fs = require('fs');
 
 let Chaincode = class {
 
@@ -17,32 +18,22 @@ let Chaincode = class {
         return shim.success();
     }
 
-    async initLedger(stub, args) {
-        console.info('============= START : Initialize Ledger ===========');
-        let providers = [];
-        providers.push({
-            credentialNumber:'asdf',
-            lastName:'Doe',
-            firstName:'John'
-        });
-
-        providers.push({
-            credentialNumber:'jkl',
-            lastName:'Doe',
-            firstName:'Jane'
-        });
-
-        providers.push({
-            credentialNumber:'ajskdlf',
-            lastName:'Smith',
-            firstName:'John'
-        });
-
-        for (let i = 0; i < providers.length; i++) {
-            providers[i].docType = 'provider';
-            await stub.putState(providers[i].credentialNumber , Buffer.from(JSON.stringify(providers[i])));
-            console.info('Added <--> ', providers[i].credentialNumber);
+    async bulkLoad(stub, args) {
+        if (args.length !== 1) {
+            throw new Error('Incorrect number of arguments. Expecting 1');
         }
+
+        let filename = JSON.parse(args[0]);
+        let promises = [];
+
+        console.info('============= START : Loading File ' + filename + ' To Ledger ===========');
+        let list = JSON.parse(fs.readFileSync(require.resolve("./output/" + filename)));
+        list.forEach( function(provider){
+            console.info(' Adding <--> ', provider.credentialNumber);
+            promises.push( stub.putState(provider.credentialNumber, Buffer.from(JSON.stringify(provider))));
+        });
+
+        await Promise.all(promises);
         console.info('============= END : Initialize Ledger ===========');
     }
 
@@ -146,7 +137,6 @@ let Chaincode = class {
 
         return Buffer.from(JSON.stringify(results));
     }
-
 
     async getAllResults(iterator, isHistory) {
         let allResults = [];
