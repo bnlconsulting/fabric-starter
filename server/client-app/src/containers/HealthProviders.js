@@ -1,7 +1,7 @@
 //REACT
 import React, { Component } from 'react';
 
-//PERSONAL
+//INTERNAL
 import './HealthProviders.css';
 import DifferencesDisplay from '../components/DifferencesDisplay'
 
@@ -19,11 +19,8 @@ import { Table, Input, Card, Steps, Icon } from 'antd';
 //REACT ROUTER
 import { Link } from 'react-router-dom'
 
-
 const Search = Input.Search;
 const Step = Steps.Step;
-
-
 
 const columns = [
     {
@@ -70,7 +67,7 @@ const columns = [
                 <Link  to={"/healthProviders/edit/" + record.Key}>Edit/Detail</Link>
         </span> )
         }
-    }   
+    }
 ];
 
 class HealthProviders extends Component {
@@ -122,14 +119,12 @@ class HealthProviders extends Component {
             this.state.sort = null;
         }
         this.props.getProviderData( _.merge({}, this.state.search, this.state.sort));
-    }
-
+    };
 
     onExpand = (expanded, record) => {
         if(expanded && record.history == null)
             this.props.getProviderHistory(record.Key);
     };
-
 
     render() {
         let historyLimit = 3;
@@ -152,12 +147,11 @@ class HealthProviders extends Component {
                        onExpand={this.onExpand}
                        expandedRowRender={record => (<div style={{marginRight:((record.history || []).length <= 3) ? 50  : 'inherit'}}>
 
-                           {/*AP60025716*/}
                            <Steps size="small"  >
                                {
                                    (record.history || [])
                                        .slice(0, historyLimit)
-                                       .map((transaction, index, collection) => {
+                                       .map((transaction, index) => {
                                            return (
                                                <Step key={transaction.TxId}
                                                      icon={transaction.txOrder === 0
@@ -199,7 +193,7 @@ class HealthProviders extends Component {
                                          description={<Link  to={"/healthProviders/edit/" + record.Key} >
                                              <div>View <br/>Full <br/>History</div>
                                          </Link>}
-                                         />
+                                   />
                                ) }
 
 
