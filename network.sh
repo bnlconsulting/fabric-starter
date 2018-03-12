@@ -209,9 +209,9 @@ function generatePeerArtifacts() {
 	    -e "s/COUCHDB0_PORT/$couchdb0_port/g"\
 	    -e "s/COUCHDB1_PORT/$couchdb1_port/g"\
 	    -e "s/COUCHDB_USER=/COUCHDB_USER=$COUCHDB_USER/g"\
-	    -e "s/COUCHDB_PASSWORD=/COUCHDB_PASSWORD=$COUCHDB_PASSWORD/g"\
+	    -e 's/COUCHDB_PASSWORD=/COUCHDB_PASSWORD='"$(echo $COUCHDB_PASSWORD | sed -e 's/[\/&]/\\&/g')"'/g'\
 	    -e "s/CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME=/CORE_LEDGER_STATE_COUCHDBCONFIG_USERNAME=$COUCHDB_USER/g"\
-	    -e "s/CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD=/CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD=$COUCHDB_PASSWORD/g" ${compose_template}\
+	    -e 's/CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD=/CORE_LEDGER_STATE_COUCHDBCONFIG_PASSWORD='"$(echo $COUCHDB_PASSWORD | sed -e 's/[\/&]/\\&/g')"'/g' ${compose_template}\
 	    | awk '{gsub(/\[newline\]/, "\n")}1' > ${f}
 
     # fabric-ca-server-config.yaml
