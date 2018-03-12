@@ -182,6 +182,11 @@ function generatePeerArtifacts() {
 
     echo "Creating peer yaml files with $DOMAIN, $org, $api_port, $www_port, $ca_port, $peer0_port, $peer0_event_port, $peer1_port, $peer1_event_port, $couchdb0_port, $couchdb1_port"
 
+
+    case ${COUCHDB_USER-} in '') printf "COUCHDB_USER must be set \n Do so with: \n $ export COUCHDB_USER=user \n Where \"user\" is your desired CouchDB admin username \n" >&2; exit 1;; esac
+    case ${COUCHDB_PASSWORD-} in '') printf "COUCHDB_PASSWORD must be set \n Do so with: \n $ export COUCHDB_PASSWORD=ComplexPass2018! \n Where \"ComplexPass2018!\" is your desired CouchDB admin user password \n" >&2; exit 1;; esac
+
+
     f="ledger/docker-compose-$org.yaml"
     compose_template=ledger/docker-composetemplate-peer.yaml
 
@@ -189,7 +194,7 @@ function generatePeerArtifacts() {
     sed -e "s/DOMAIN/$DOMAIN/g" -e "s/ORG/$org/g" artifacts/cryptogentemplate-peer.yaml > artifacts/"cryptogen-$org.yaml"
 
     # docker-compose.yaml
-    sed -e "s/PEER_EXTRA_HOSTS/$peer_extra_hosts/g" -e "s/CLI_EXTRA_HOSTS/$cli_extra_hosts/g" -e "s/API_EXTRA_HOSTS/$api_extra_hosts/g" -e "s/DOMAIN/$DOMAIN/g" -e "s/\([^ ]\)ORG/\1$org/g" -e "s/API_PORT/$api_port/g" -e "s/WWW_PORT/$www_port/g" -e "s/CA_PORT/$ca_port/g" -e "s/PEER0_PORT/$peer0_port/g" -e "s/PEER0_EVENT_PORT/$peer0_event_port/g" -e "s/PEER1_PORT/$peer1_port/g" -e "s/PEER1_EVENT_PORT/$peer1_event_port/g" ${compose_template} -e "s/COUCHDB0_PORT/$couchdb0_port/g" -e "s/COUCHDB1_PORT/$couchdb1_port/g"| awk '{gsub(/\[newline\]/, "\n")}1' > ${f}
+    sed -e "s/PEER_EXTRA_HOSTS/$peer_extra_hosts/g" -e "s/CLI_EXTRA_HOSTS/$cli_extra_hosts/g" -e "s/API_EXTRA_HOSTS/$api_extra_hosts/g" -e "s/DOMAIN/$DOMAIN/g" -e "s/\([^ ]\)ORG/\1$org/g" -e "s/API_PORT/$api_port/g" -e "s/WWW_PORT/$www_port/g" -e "s/CA_PORT/$ca_port/g" -e "s/PEER0_PORT/$peer0_port/g" -e "s/PEER0_EVENT_PORT/$peer0_event_port/g" -e "s/PEER1_PORT/$peer1_port/g" -e "s/PEER1_EVENT_PORT/$peer1_event_port/g" ${compose_template} -e "s/COUCHDB0_PORT/$couchdb0_port/g" -e "s/COUCHDB1_PORT/$couchdb1_port/g" -e "s/COUCHDB_USER=/COUCHDB_USER=$COUCHDB_USER/g" -e "s/COUCHDB_PASSWORD=/COUCHDB_PASSWORD=$COUCHDB_PASSWORD/g"| awk '{gsub(/\[newline\]/, "\n")}1' > ${f}
 
     # fabric-ca-server-config.yaml
     sed -e "s/ORG/$org/g" artifacts/fabric-ca-server-configtemplate.yaml > artifacts/"fabric-ca-server-config-$org.yaml"
