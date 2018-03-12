@@ -1,9 +1,3 @@
-/*
-# Copyright IBM Corp. All Rights Reserved.
-#
-# SPDX-License-Identifier: Apache-2.0
-*/
-
 'use strict';
 const shim = require('fabric-shim');
 const util = require('util');
@@ -14,8 +8,37 @@ let Chaincode = class {
     // The Init method is called when the Smart Contract is instantiated by the blockchain network
     // Best practice is to have any Ledger initialization in separate function -- see initLedger()
     async Init(stub) {
-        console.info('=========== Instantiated fabcar chaincode ===========');
+        console.info('=========== Instantiated chaincode ===========');
         return shim.success();
+    }
+
+    async initLedger(stub, args) {
+        console.info('============= START : Initialize Ledger ===========');
+        let providers = [];
+        providers.push({
+            credentialNumber:'asdf',
+            lastName:'Doe',
+            firstName:'John'
+        });
+
+        providers.push({
+            credentialNumber:'jkl',
+            lastName:'Doe',
+            firstName:'Jane'
+        });
+
+        providers.push({
+            credentialNumber:'ajskdlf',
+            lastName:'Smith',
+            firstName:'John'
+        });
+
+        for (let i = 0; i < providers.length; i++) {
+            providers[i].docType = 'provider';
+            await stub.putState(providers[i].credentialNumber , Buffer.from(JSON.stringify(providers[i])));
+            console.info('Added <--> ', providers[i].credentialNumber);
+        }
+        console.info('============= END : Initialize Ledger ===========');
     }
 
     async bulkLoad(stub, args) {
@@ -50,7 +73,7 @@ let Chaincode = class {
             throw new Error('Received unknown function ' + ret.fcn + ' invocation');
         }
         try {
-            console.log(ret.fcn, JSON.stringify(ret.params))
+            console.log(ret.fcn, JSON.stringify(ret.params));
             let payload = await method(stub, ret.params, this);
             return shim.success(payload);
         } catch (err) {
