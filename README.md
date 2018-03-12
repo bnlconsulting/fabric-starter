@@ -108,7 +108,7 @@ Additionally, you will need to choose a CouchDB admin username and password:
 ```bash
 export COUCHDB_USER=admin COUCHDB_PASSWORD=MyComplexPass2018!
 ```
-This must be performed on all peer hosts. NOTE: The `network.sh` script will exit if these rae not set.
+This must be performed on all peer hosts. NOTE: The `network.sh` script will exit if these are not set.
 
 
 The setup process takes several steps whose order is important.
