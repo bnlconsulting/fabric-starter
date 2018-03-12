@@ -104,6 +104,13 @@ in [network.sh](network.sh) file or by env variables:
 export IP_ORDERER=54.235.3.243 IP1=54.235.3.231 IP2=54.235.3.232 IP3=54.235.3.233
 ```  
 
+Additionally, you will need to choose a CouchDB admin username and password:
+```bash
+export COUCHDB_USER=admin COUCHDB_PASSWORD=MyComplexPass2018!
+```
+This must be performed on all peer hosts. NOTE: The `network.sh` script will exit if these rae not set.
+
+
 The setup process takes several steps whose order is important.
 
 Each member generates artifacts on their respective hosts (can be done in parallel):
