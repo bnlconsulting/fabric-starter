@@ -75,7 +75,7 @@ class HealthProviders extends Component {
         pagination: {},
         sort: {},
         search: {
-            "selector": { docType: "provider", lastName:{$gt: null}, middleName:{$gt:null}, credentialNumber:{$gt:null}, firstName:{$gt:null}, expirationDate:{$gt:null}, status:{$gt:null}, credentialType:{$gt:null} }
+            "selector": { lastName:{$gt: null}, middleName:{$gt:null}, credentialNumber:{$gt:null}, firstName:{$gt:null}, expirationDate:{$gt:null}, status:{$gt:null}, credentialType:{$gt:null} }
         }
     };
     constructor(props) {
@@ -98,9 +98,9 @@ class HealthProviders extends Component {
 
     updateSearch(value){
         if (value === ''){
-            this.state.search = {   "selector":{docType:"provider"}  };
+            this.state.search = {   "selector":{ }  };
         }else{
-            this.state.search = { "selector": { docType: "provider", $or: [{ firstName: value }, { middleName: value }, { lastName: value }, { credentialNumber: value }, { expirationDate: value }, { status: value }, { credentialType:value } ]}  };
+            this.state.search = { "selector": {  $or: [{ firstName: value }, { middleName: value }, { lastName: value }, { credentialNumber: value }, { expirationDate: value }, { status: value }, { credentialType:value } ]}  };
         }
         this.props.getProviderData( _.merge({}, this.state.search, this.state.sort));
     }
