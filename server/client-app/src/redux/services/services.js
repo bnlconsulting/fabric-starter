@@ -305,7 +305,10 @@ function getTxHistory(peer, channel){
                                     _.reject(action.payload.action.proposal_response_payload.extension.results.ns_rwset, {namespace:'lscc'})
                                         .forEach(function(rwSet){
                                             let write = rwSet.rwset.writes[0];
-                                            write.value = JSON.parse(write.value);
+                                            if(write.value === ""){
+                                                write.value = {}
+                                            }else
+                                                write.value = JSON.parse(write.value);
                                             if(write.value.username){
                                                 block.username = write.value.username;
                                                 delete write.value.username;
