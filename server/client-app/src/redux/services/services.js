@@ -12,7 +12,7 @@ import changeCase from 'change-case';
 
 let token = null;
 
-let baseURI = 'http://54.209.123.79:4000';
+let baseURI = 'http://54.210.144.25:4000';
 
 function getConfig(){
     return request({
