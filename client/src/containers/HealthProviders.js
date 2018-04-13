@@ -26,39 +26,32 @@ const columns = [
     {
         title: 'Credential Number',
         dataIndex: 'Key',
-        key: 'credentialNumber',
-        sorter: true,
+        key: 'credentialNumber'
     },{
         title: 'First Name',
         dataIndex: 'Record.firstName',
-        key: 'firstName',
-        sorter: true
+        key: 'firstName'
     },{
         title: 'Last Name',
         dataIndex: 'Record.lastName',
-        key: 'lastName',
-        sorter: true,
+        key: 'lastName'
     },{
         title: 'Middle Name',
         dataIndex: 'Record.middleName',
         key: 'middleName',
-        sorter: true
     },{
         title: 'Type',
         dataIndex: 'Record.credentialType',
         key: 'credentialType',
-        width: 300,
-        sorter: true
+        width: 300
     },{
         title: 'Status',
         dataIndex: 'Record.status',
-        key: 'status',
-        sorter: true
+        key: 'status'
     },{
         title: 'Expiration',
         dataIndex: 'Record.expirationDate',
-        key: 'expirationDate',
-        sorter: true
+        key: 'expirationDate'
     },{
         title: 'Action',
         key: 'edit',
@@ -72,10 +65,11 @@ const columns = [
 
 class HealthProviders extends Component {
     state = {
-        pagination: {},
+        pagination: {pageSize:10, current:1},
         sort: {},
+        sortField: null,
         search: {
-            "selector": { lastName:{$gt: null}, middleName:{$gt:null}, credentialNumber:{$gt:null}, firstName:{$gt:null}, expirationDate:{$gt:null}, status:{$gt:null}, credentialType:{$gt:null} }
+            "selector": { }
         }
     };
     constructor(props) {
@@ -91,7 +85,7 @@ class HealthProviders extends Component {
                 nextProps.selectedPeer !== this.props.selectedPeer ||
                 nextProps.selectedChannel !== this.props.selectedChannel ||
                 nextProps.selectedChaincode !== this.props.selectedChaincode )  ) {
-            this.props.getProviderData();
+            this.updateProvidersList();
         }
 
     }
@@ -102,23 +96,41 @@ class HealthProviders extends Component {
         }else{
             this.state.search = { "selector": {  $or: [{ firstName: value }, { middleName: value }, { lastName: value }, { credentialNumber: value }, { expirationDate: value }, { status: value }, { credentialType:value } ]}  };
         }
-        this.props.getProviderData( _.merge({}, this.state.search, this.state.sort));
+
+        this.updateProvidersList();
+    }
+
+    updateProvidersList(){
+        let base = {selector:{index:null}};
+
+        if(this.state.sortField){
+            base = {"selector": { [this.state.sortField]: {$gt:null}} };
+        }
+
+        console.log('hgeree', this.state.pagination);
+        base.selector.index = {"$gt":((this.state.pagination.current - 1) * this.state.pagination.pageSize), "$lte":(this.state.pagination.current )* this.state.pagination.pageSize};
+
+        this.props.getProviderData( _.merge(base, this.state.search, this.state.sort));
+
     }
 
     handleTableChange = (pagination, filters, sorter) => {
         const pager = { ...this.state.pagination };
-        pager.current = pagination.current;
-        this.setState({
-            pagination: pager
-        });
+
         if (sorter.column) {
             let temp = {};
             temp[sorter.column.key] = sorter.order === "descend" ? "desc" : "asc" ;
             this.state.sort = { sort: [temp] };
+            this.state.sortField = sorter.column.key;
         } else {
             this.state.sort = null;
+            this.state.sortField = null;
         }
-        this.props.getProviderData( _.merge({}, this.state.search, this.state.sort));
+
+        pager.current = pagination.current;
+        this.setState({
+            pagination: pager
+        }, this.updateProvidersList);
     };
 
     onExpand = (expanded, record) => {
@@ -126,11 +138,32 @@ class HealthProviders extends Component {
             this.props.getProviderHistory(record.Key);
     };
 
+    // // PAGINATION OPTIONS
+    // paginationOptions = {
+    //     showSizeChanger:true,
+    //     pageSizeOptions: ['10', '25', '50', '100'],
+    //     onShowSizeChange: (_, pageSize) => {
+    //         console.log(pageSize)
+    //     },
+    //     onChange: (page) => {
+    //         console.log(page)
+    //
+    //     }
+    // }
+
     render() {
+        const pagination = {
+            ...this.paginationOptions,
+            total: 1500000,
+            current: this.state.pagination.current,
+            pageSize: this.state.pagination.pageSize,
+        };
+
         let historyLimit = 3;
 
         return (
             <Card title="Data Providers List">
+                <div>{JSON.stringify(this.state.pagination)}</div>
 
                 <Search className="search"
                         placeholder="input search text"
@@ -139,7 +172,7 @@ class HealthProviders extends Component {
                 <br/>
 
                 <Table columns={columns}
-                       pagination={{ showSizeChanger:true, pageSizeOptions: ['10', '25', '50', '100'] }}
+                       pagination={pagination}
                        dataSource={this.props.list}
                        rowKey="Key"
                        loading={this.props.running > 0}

@@ -12,7 +12,7 @@ import changeCase from 'change-case';
 
 let token = null;
 
-let baseURI = 'http://54.210.144.25:4000';
+let baseURI = 'http://54.89.228.85:4000';
 
 function getConfig(){
     return request({
@@ -81,9 +81,7 @@ function getChaincodes(peer, channel){
 }
 
 function queryList(org, peer, channel, chaincode, query){
-
     query = query || { selector:{ } };
-    query.selector.index = {$gt:null};
 
     return request({
         uri: baseURI + '/channels/' + channel + '/chaincodes/' + chaincode,

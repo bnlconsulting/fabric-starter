@@ -25,7 +25,6 @@ var autoloadMiddleware = require('./lib/express-middleware-autoload');
 // config
 const ORG      = process.env.ORG;
 const PORT     = process.env.PORT || 4000;
-const WEB_DIR  = process.env.WEB_DIR || 'client-app/build';
 const M_C_F    = process.env.MIDDLEWARE_CONFIG_FILE || './middleware/map.json';
 
 var clientEnv = {
@@ -36,14 +35,8 @@ var socketOptions = { origins: '*:*'};
 ////
 var app = express();
 var adminApp = require('./app/express-web-app')('www-admin', clientEnv);
-var webApp   = require('./app/express-web-app')(WEB_DIR, clientEnv);
 var apiApp   = require('./app/express-api-app')(); // TODO: this app still uses process.env. get rid of it
 
-
-
-app.get('/',            (req, res)=>res.redirect('/web') );
-app.use('/web',         webApp);
-app.use('/static',      (req, res)=>res.redirect('/web' + req.originalUrl) );
 app.get('/favicon.ico', webApp.handle.bind(webApp) );
 app.use('/admin',       adminApp);
 

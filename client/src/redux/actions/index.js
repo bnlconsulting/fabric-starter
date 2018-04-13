@@ -3,7 +3,7 @@ import history from '../history';
 
 export const getProviderData = ( query) => {
     return (dispatch, getState, api) => {
-        dispatch({type: types.GET_PROVIDER_DATA});
+        //dispatch({type: types.GET_PROVIDER_DATA});
         dispatch({type: types.REQUEST_MADE});
 
         return api.queryList(getState().providers.selectedOrg,  getState().providers.selectedPeer, getState().providers.selectedChannel, getState().providers.selectedChaincode, query)
@@ -64,6 +64,9 @@ export const updateProvider = ( provider) => {
                 getProvider(provider.credentialNumber)(dispatch, getState, api);
                 getProviderHistory(provider.credentialNumber)(dispatch, getState, api);
                 return data
+            })
+            .catch((error) => {
+                console.log(error);
             })
             .finally(() => {
                 dispatch({type: types.REQUEST_RETURNED});
