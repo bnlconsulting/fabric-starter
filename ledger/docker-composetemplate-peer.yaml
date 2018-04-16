@@ -119,6 +119,21 @@ services:
       - peer1.ORG.DOMAIN
     API_EXTRA_HOSTS
 
+  # UI server
+  ui.ORG.DOMAIN:
+    extends:
+      file: base.yaml
+      service: ui-base
+    container_name: ui.ORG.DOMAIN
+    ports:
+      - 3000:3000
+    environment:
+      - ORG=ORG
+      - PORT=3000
+    depends_on:
+      - peer0.ORG.DOMAIN
+      - peer1.ORG.DOMAIN
+
   cli.DOMAIN:
     container_name: cli.DOMAIN
     extends:

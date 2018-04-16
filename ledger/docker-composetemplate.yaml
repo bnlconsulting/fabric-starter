@@ -168,6 +168,33 @@ services:
     depends_on:
       - cli.ORG2.DOMAIN
 
+  # UI server
+  ui.ORG1.DOMAIN:
+    extends:
+      file: base.yaml
+      service: ui-base
+    container_name: ui.ORG1.DOMAIN
+    ports:
+      - "3000:3000"
+    environment:
+      - ORG=ORG1
+      - PORT=3000
+    depends_on:
+      - cli.ORG1.DOMAIN
+
+  ui.ORG2.DOMAIN:
+    extends:
+      file: base.yaml
+      service: ui-base
+    container_name: ui.ORG2.DOMAIN
+    ports:
+      - "3001:3000"
+    environment:
+      - ORG=ORG2
+      - PORT=3000
+    depends_on:
+      - cli.ORG2.DOMAIN
+
   cli.ORG1.DOMAIN:
     container_name: cli.ORG1.DOMAIN
     extends:
