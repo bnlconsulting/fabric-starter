@@ -13,6 +13,7 @@ import changeCase from 'change-case';
 let token = null;
 
 let baseURI = 'http://54.89.228.85:4000';
+const txHistoryLimit = 10000;
 
 function getConfig(){
     return request({
@@ -259,71 +260,63 @@ function getTxHistory(peer, channel){
         json: true
 
     }).then((response) => {
-        let items = [];
+        let transactions = [];
+
         return getBlockInfo(peer, channel, response.currentBlockHash)
             .then((blockResponse) => {
-                let block = {};
-                block.blockNumber =parseInt(blockResponse.header.number, 10);
+                let placeHolders = {};
+                placeHolders.blockNumber = parseInt(blockResponse.header.number, 10);
 
                 blockResponse.data.data.forEach(function(data){
-                    block.timestamp = data.payload.header.channel_header.timestamp;
-                    block.txId = data.payload.header.channel_header.tx_id;
+                    placeHolders.timestamp = data.payload.header.channel_header.timestamp;
+                    placeHolders.txId = data.payload.header.channel_header.tx_id;
 
                     data.payload.data.actions.forEach(function(action){
                         _.reject(action.payload.action.proposal_response_payload.extension.results.ns_rwset, {namespace:'lscc'})
-                            .forEach(function(rwSet){
-                                let write = rwSet.rwset.writes[0];
-                                write.value = JSON.parse(write.value);
-                                if(write.value.username){
-                                    block.username = write.value.username;
-                                    delete write.value.username;
-                                }
-                                block.write = write;
+                            .every(function(rwSet){
+                                rwSet.rwset.writes.every(function(write){
+                                    let jsonValue = JSON.parse(write.value);
+                                    let transaction = _.assign({write:jsonValue, username:jsonValue.username}, placeHolders);
+                                    delete jsonValue.username;
+                                    transactions.push(transaction);
+                                    if(transactions.length >= txHistoryLimit) return false;
+                                    else return true;
+                                });
+                                if(transactions.length >= txHistoryLimit) return false;
+                                else return true;
                             })
                     });
                 });
-                items.push(block);
-
-                return block
-
+                return placeHolders.blockNumber;
             })
-            .then((block) => {
-                let promises = [];
-                for (let i = (block.blockNumber - 1); i > (block.blockNumber - 50); i--) {
-                    promises.push(getBlockInfoByNumber(peer, channel, i)
-                        .then((blockResponse) => {
-                            let block = {};
-                            block.blockNumber =parseInt(blockResponse.header.number, 10);
+            .then(async function(blockNumber)  {
+                while(transactions.length < txHistoryLimit && blockNumber > 0){
+                    let currentBlock = await getBlockInfoByNumber(peer, channel, --blockNumber);
+                    let placeHolders = {blockNumber:blockNumber};
+                    currentBlock.data.data.forEach(function(data){
+                        placeHolders.timestamp = data.payload.header.channel_header.timestamp;
+                        placeHolders.txId = data.payload.header.channel_header.tx_id;
 
-                            blockResponse.data.data.forEach(function(data){
-                                block.timestamp = data.payload.header.channel_header.timestamp;
-                                block.txId = data.payload.header.channel_header.tx_id;
-
-                                data.payload.data.actions.forEach(function(action){
-                                    _.reject(action.payload.action.proposal_response_payload.extension.results.ns_rwset, {namespace:'lscc'})
-                                        .forEach(function(rwSet){
-                                            let write = rwSet.rwset.writes[0];
-                                            if(write.value === ""){
-                                                write.value = {}
-                                            }else
-                                                write.value = JSON.parse(write.value);
-                                            if(write.value.username){
-                                                block.username = write.value.username;
-                                                delete write.value.username;
-                                            }
-                                            block.write = write;
-                                        })
-                                });
-                            });
-                            items.push(block);
-
-                            return block
-                        }));
+                        data.payload.data.actions.forEach(function(action){
+                            _.reject(action.payload.action.proposal_response_payload.extension.results.ns_rwset, {namespace:'lscc'})
+                                .every(function(rwSet){
+                                    rwSet.rwset.writes.every(function(write){
+                                        let jsonValue = JSON.parse(write.value);
+                                        let transaction = _.assign({write:jsonValue, username:jsonValue.username}, placeHolders);
+                                        delete jsonValue.username;
+                                        transactions.push(transaction);
+                                        if(transactions.length >= txHistoryLimit) return false;
+                                        else return true;
+                                    });
+                                    if(transactions.length >= txHistoryLimit) return false;
+                                    else return true;
+                                })
+                        });
+                    });
                 }
-                return Promise.all(promises);
             })
             .then(() => {
-                return items
+                return transactions
             });
     });
 }
@@ -362,26 +355,7 @@ function getBlockInfo(peer, channel, hash){
         },
         json: true
 
-    })/*.then((response) => {
-
-        let header = response.header;
-        console.log(header);
-
-        response.data.data.forEach(function(data){
-            console.log(data.payload.header.channel_header.tx_id);
-            // console.log(data);
-            data.payload.data.actions.forEach(function(action){
-                action.payload.action.proposal_response_payload.extension.results.ns_rwset.forEach(function(rwSet){
-                    console.log(rwSet.rwset.writes)
-                })
-            });
-        });
-
-        let num = parseInt(header.number, 10);
-        getBlockInfoByNumber(peer, channel,  --num );
-
-        return response ;
-    })*/;
+    });
 }
 
 function getBlockInfoByNumber(peer, channel, blockNumber){

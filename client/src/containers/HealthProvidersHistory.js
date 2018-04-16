@@ -34,11 +34,11 @@ const columns = [
         key: 'username'
     },{
         title: 'Credential',
-        dataIndex: 'write.key',
-        key: 'key',
+        dataIndex: 'write.credentialNumber',
+        key: 'credentialNumber',
         render:(text, record) =>{
             return ( <span>
-                <Link  to={"/healthProviders/edit/" + (record.write ? record.write.key : '')}>{record.write ? record.write.key : 'null'}</Link>
+                <Link  to={"/healthProviders/edit/" + (record.write ? record.write.credentialNumber : '')}>{record.write ? record.write.credentialNumber : 'null'}</Link>
         </span> )
         }
     }
@@ -71,11 +71,11 @@ class HealthProvidersHistory extends Component {
                 <Table columns={columns}
                        pagination={{ showSizeChanger:true, pageSizeOptions: ['10', '25', '50', '100'] }}
                        dataSource={this.props.txHistory}
-                       rowKey="blockNumber"
+                       rowKey={(record) => {return record.blockNumber + record.write.credentialNumber}}
                        expandedRowRender={record => {
                            let display = [];
-                           for(let property in record.write ? record.write.value : []){
-                               display.push(<p className="historyWrite" key={property}><strong>{property}:</strong> {record.write.value[property]}</p>)
+                           for(let property in record.write ? record.write : []){
+                               display.push(<p className="historyWrite" key={property}><strong>{property}:</strong> {record.write[property]}</p>)
                            }
                            return (<div>
                                    {display}
