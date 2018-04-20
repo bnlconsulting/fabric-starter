@@ -48,15 +48,21 @@ let Chaincode = class {
 
         let filename = JSON.parse(args[0]);
         let promises = [];
+        let additions = 0;
 
         console.info('============= START : Loading File ' + filename + ' To Ledger ===========');
         let list = JSON.parse(fs.readFileSync(require.resolve("./output/" + filename)));
         list.forEach( function(provider){
             console.info(' Adding <--> ', provider.credentialNumber);
-            promises.push( stub.putState(provider.credentialNumber, Buffer.from(JSON.stringify(provider))));
+            promises.push( stub.putState(provider.credentialNumber, Buffer.from(JSON.stringify(provider)))
+                .then(()=>{additions++})
+            );
         });
 
         await Promise.all(promises);
+
+        await stub.invokeChaincode('stats', ['increaseStat', "provider", "totalRecords", list.length().toString()]);
+
         console.info('============= END : Initialize Ledger ===========');
     }
 
@@ -113,6 +119,8 @@ let Chaincode = class {
             throw new Error(newProvider.credentialNumber + ' already exist: ');
         }
 
+        await stub.invokeChaincode('stats', ['increaseStat', "provider", "totalRecords", "1"]);
+
         console.info('============= END : Create Provider ===========');
     }
 
@@ -152,14 +160,21 @@ let Chaincode = class {
 
         let queryString =args[0];
 
-        console.info('- getQueryResultForQueryString queryString:\n' + queryString)
+        console.info('- getQueryResultForQueryString queryString:\n' + queryString);
         let resultsIterator = await stub.getQueryResult(queryString);
         let method = thisClass['getAllResults'];
 
         let results = await method(resultsIterator, false);
 
-        return Buffer.from(JSON.stringify(results));
+        let stat = await stub.invokeChaincode('stats', ['queryStat', "provider"]);
+
+        console.log(JSON.parse(stat.payload.toString('utf8')));
+
+        stat = JSON.parse(stat.payload.toString('utf8'));
+
+        return Buffer.from(JSON.stringify({stat: stat, list:results}));
     }
+
 
     async getAllResults(iterator, isHistory) {
         let allResults = [];

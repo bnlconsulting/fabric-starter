@@ -12,7 +12,7 @@ import changeCase from 'change-case';
 
 let token = null;
 
-let baseURI = 'http://54.89.228.85:4000';
+let baseURI = 'http://184.72.195.49:4000';
 const txHistoryLimit = 10000;
 
 function getConfig(){
@@ -100,6 +100,7 @@ function queryList(org, peer, channel, chaincode, query){
         json: true
 
     }).then((response) => {
+        //response.result = response.result.list;
         return response;
     });
 }
@@ -290,7 +291,7 @@ function getTxHistory(peer, channel){
                 return placeHolders.blockNumber;
             })
             .then(async function(blockNumber)  {
-                while(transactions.length < txHistoryLimit && blockNumber > 0){
+                while(transactions.length < txHistoryLimit && blockNumber > 1){
                     let currentBlock = await getBlockInfoByNumber(peer, channel, --blockNumber);
                     let placeHolders = {blockNumber:blockNumber};
                     currentBlock.data.data.forEach(function(data){

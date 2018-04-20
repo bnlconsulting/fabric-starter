@@ -6,6 +6,7 @@ import _ from 'lodash';
 
 const defaults = {
     list: [],
+    totalRecords:0,
     provider:null,
     providerHistory:null,
 
@@ -35,7 +36,8 @@ const defaults = {
 function setData(store, data) {
     return {
         ...store,
-        list: data.slice(),
+        list: (data.list || [] ).slice(),
+        totalRecords:data.stat.totalRecords,
         running: store.running - 1
     };
 }
