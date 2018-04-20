@@ -61,7 +61,7 @@ let Chaincode = class {
 
         await Promise.all(promises);
 
-        await stub.invokeChaincode('stats', ['increaseStat', "provider", "totalRecords", list.length().toString()]);
+        await stub.invokeChaincode('stats', ['increaseStat', "provider", "totalRecords", additions.toString()]);
 
         console.info('============= END : Initialize Ledger ===========');
     }

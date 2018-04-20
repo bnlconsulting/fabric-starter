@@ -12,7 +12,7 @@ import changeCase from 'change-case';
 
 let token = null;
 
-let baseURI = 'http://184.72.195.49:4000';
+let baseURI = window.location.protocol + '//' + window.location.hostname + ':4000';
 const txHistoryLimit = 10000;
 
 function getConfig(){
