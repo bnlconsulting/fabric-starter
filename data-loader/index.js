@@ -59,7 +59,7 @@ function splitCsv(inputStream){
                     //run loader...
                     for(let fileIndex = 0 ; fileIndex < chunkIndex ; fileIndex++){
                         let command =
-                            "docker-compose -f /etc/hyperledger/ledger/docker-compose-a.yaml exec \"cli.a.example.com\" bash " +
+                            "docker-compose -f /etc/hyperledger/ledger/docker-compose-a.yaml run \"cli.a.example.com\" bash " +
                             "-c \"CORE_PEER_ADDRESS=peer0.a.example.com:7051 " +
                             "peer chaincode invoke " +
                             "--tls --cafile /etc/hyperledger/crypto/orderer/tls/ca.crt " +
