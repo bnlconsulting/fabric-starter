@@ -1,0 +1,14 @@
+{
+  "name": "dataloader",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "child-process-promise": "^2.2.1",
+    "lodash": "^4.17.4"
+  }
+}

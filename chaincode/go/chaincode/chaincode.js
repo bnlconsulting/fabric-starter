@@ -112,6 +112,9 @@ let Chaincode = class {
 
         newProvider.docType =  'provider';
 
+        let stat = await stub.invokeChaincode('stats', ['queryStat', "provider"]);
+        newProvider.index = stat.totalRecords++;
+
         let providerAsBytes = await stub.getState(newProvider.credentialNumber); //get the provider from chaincode state
         if (!providerAsBytes || providerAsBytes.toString().length <= 0) {
             await stub.putState(newProvider.credentialNumber, Buffer.from(JSON.stringify(newProvider)));
